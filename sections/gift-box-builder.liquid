@@ -1,0 +1,72 @@
+<section class="section page-width"><div class="page-heading"><p class="eyebrow">A BOX FULL OF THEIR FAVORITES</p><h1>{{ section.settings.heading | escape }}</h1><p>{{ section.settings.description | escape }}</p></div>{% if section.settings.box_product != blank and section.settings.items_collection != blank %}<gift-box-builder data-section-id="{{ section.id }}" data-min="{{ section.settings.min_items }}" data-max="{{ section.settings.max_items }}"><script type="application/json" data-builder-catalog>{"box":{% render 'builder-product-data', product: section.settings.box_product %},"items":[{% for product in section.settings.items_collection.products limit: 50 %}{% render 'builder-product-data', product: product %}{% unless forloop.last %},{% endunless %}{% endfor %}],"wrapping":[{% assign wrapping_count = 0 %}{% for block in section.blocks %}{% if block.type == 'wrapping' and block.settings.product != blank %}{% if wrapping_count > 0 %},{% endif %}{% render 'builder-product-data', product: block.settings.product %}{% assign wrapping_count = wrapping_count | plus: 1 %}{% endif %}{% endfor %}],"card":{% if section.settings.card_product != blank %}{% render 'builder-product-data', product: section.settings.card_product %}{% else %}null{% endif %}}</script><noscript><p>The step-by-step builder requires JavaScript. You can purchase individual gifts from the collection or contact our team for help.</p><a class="button" href="{{ section.settings.items_collection.url }}">Shop gift-box items</a></noscript><div class="builder-shell" hidden data-builder-shell><ol class="builder-progress" aria-label="Gift box progress"><li data-step-indicator>Box</li><li data-step-indicator>Gifts</li><li data-step-indicator>Wrapping</li><li data-step-indicator>Card</li><li data-step-indicator>Message</li><li data-step-indicator>Review</li></ol><div class="builder-body"><div><section data-step="0"><h2 tabindex="-1">Start with a beautiful box.</h2><div data-box-options class="builder-options"></div></section><section data-step="1" hidden><h2 tabindex="-1">Fill it with little joys.</h2><p>Choose {{ section.settings.min_items }}–{{ section.settings.max_items }} individual items.</p><div data-item-options class="builder-item-grid"></div><p data-item-count role="status"></p></section><section data-step="2" hidden><h2 tabindex="-1">The perfect finishing touch.</h2><p>Optional wrapping is a separately priced product.</p><div data-wrapping-options class="builder-options"></div></section><section data-step="3" hidden><h2 tabindex="-1">A card from the heart.</h2><div data-card-options class="builder-options"></div></section><section data-step="4" hidden><h2 tabindex="-1">Make it personal.</h2><label class="field">Recipient name (optional)<input maxlength="60" data-builder-name></label><label class="field">Your message (optional)<textarea maxlength="300" rows="4" data-builder-message></textarea></label><label class="field">Occasion (optional)<input maxlength="60" data-builder-occasion></label><p class="muted">Your message and box reference will be attached to the order.</p></section><section data-step="5" hidden><h2 tabindex="-1">A box made just for them.</h2><div data-builder-review></div><p class="muted">Each component is added as its own cart line. Prices and stock are validated by Shopify; shipping and taxes are calculated at checkout.</p></section><p data-builder-error class="form-error" role="alert"></p><div class="builder-navigation"><button type="button" data-builder-back class="button button-outline">Back</button><button type="button" data-builder-next class="button">Continue →</button><button type="button" data-builder-add class="button" hidden>Add this gift box {% render 'icon', name: 'bag' %}</button></div></div><aside class="builder-summary"><p class="eyebrow">YOUR THOUGHTFUL CREATION</p><h2>A little box of joy.</h2><div data-builder-summary></div><p class="subtotal">Gift box total <strong data-builder-total></strong></p><small>Shipping and taxes at checkout.</small><button type="button" data-builder-reset class="text-button">Start again</button></aside></div></div></gift-box-builder>{% else %}<div class="editorial-empty"><h2>Something thoughtful is taking shape.</h2><p>{% if request.design_mode %}Choose a box product and an items collection in this section. Add optional wrapping products and a card product.{% else %}Our gift box builder is being curated. In the meantime, discover our ready-to-give collection.{% endif %}</p><a class="button" href="{{ routes.all_products_collection_url }}">Explore gifts</a></div>{% endif %}</section>
+{% schema %}
+{
+  "name": "Gift box builder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build a box of happiness."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Their favorite little things. Your thoughtful finishing touch."
+    },
+    {
+      "type": "product",
+      "id": "box_product",
+      "label": "Box product (variants are sizes/styles)"
+    },
+    {
+      "type": "collection",
+      "id": "items_collection",
+      "label": "Gift items collection (up to 50 products)"
+    },
+    {
+      "type": "product",
+      "id": "card_product",
+      "label": "Greeting card product (variants are designs)"
+    },
+    {
+      "type": "range",
+      "id": "min_items",
+      "label": "Minimum item quantity",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "max_items",
+      "label": "Maximum item quantity",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "wrapping",
+      "name": "Wrapping product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Wrapping add-on product"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Gift box builder"
+    }
+  ]
+}
+{% endschema %}

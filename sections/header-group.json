@@ -1,0 +1,30 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement": {
+      "type": "announcement",
+      "blocks": {
+        "welcome": {
+          "type": "announcement",
+          "settings": {
+            "text": "Thoughtfully chosen. Beautifully wrapped. Made to mean more."
+          }
+        }
+      },
+      "block_order": [
+        "welcome"
+      ]
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

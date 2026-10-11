@@ -1,0 +1,20 @@
+<section class="section page-width prose-page">{% render 'breadcrumbs' %}<div class="page-heading"><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h1>{{ page.title | escape }}</h1></div>{% if section.settings.image or section.settings.show_image %}<div class="page-editorial-photo">{% render 'image', image: section.settings.image, alt: page.title %}</div>{% endif %}<div class="rte">{{ page.content }}</div>{% if page.content == blank and request.design_mode %}<p class="muted">Add this page’s content in Shopify Admin → Online Store → Pages.</p>{% endif %}</section>
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    {"type":"checkbox","id":"show_image","label":"Show editorial photograph","default":false},
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE WRAPNWHIM STORY"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
+}
+{% endschema %}

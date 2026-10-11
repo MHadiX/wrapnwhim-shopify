@@ -1,0 +1,115 @@
+<section class="page-width section product-section">{% render 'breadcrumbs' %}<div class="product-layout">{% render 'product-gallery', product: product, section: section %}<div class="product-details"><p class="eyebrow">{{ product.vendor | escape }}</p><h1>{{ product.title | escape }}</h1>{% if product.metafields.reviews.rating.value %}<p class="rating">★ {{ product.metafields.reviews.rating.value.rating }} / {{ product.metafields.reviews.rating.value.scale_max }} ({{ product.metafields.reviews.rating_count }})</p>{% endif %}{% render 'product-form', product: product, section: section %}<button type="button" class="text-button save-product" data-wishlist="{{ product.handle }}" aria-pressed="false">{% render 'icon', name: 'heart' %} Save for later</button><div class="product-accordions"><details open><summary>About this gift</summary><div class="rte">{{ product.description }}</div></details>{% if product.metafields.custom.care_instructions != blank %}<details><summary>Care instructions</summary><div class="rte">{{ product.metafields.custom.care_instructions | metafield_tag }}</div></details>{% endif %}{% for block in section.blocks %}{% if block.type == 'accordion' %}<details {{ block.shopify_attributes }}><summary>{{ block.settings.heading | escape }}</summary><div class="rte">{{ block.settings.text }}</div></details>{% elsif block.type == '@app' %}{% render block %}{% endif %}{% endfor %}</div></div></div><script type="application/ld+json">{{ product | structured_data }}</script></section>
+{% schema %}
+{
+  "name": "Product details",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show Shopify express checkout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_occasion",
+      "label": "Show occasion field on personalized gifts",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_preview",
+      "label": "Show illustrative text preview",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "upload_limit",
+      "label": "Upload size limit (MB)",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "photo_required",
+      "label": "Require photo when photo upload metafield is enabled",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {"type": "@app"},
+    {
+      "type": "personalization",
+      "name": "Personalization field",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Field label",
+          "default": "Recipient name"
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Character limit",
+          "min": 20,
+          "max": 500,
+          "step": 10,
+          "default": 100
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Required",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "multiline",
+          "label": "Multiline",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "preview",
+          "label": "Preview target",
+          "default": "name",
+          "options": [
+            {
+              "value": "name",
+              "label": "Name"
+            },
+            {
+              "value": "message",
+              "label": "Message"
+            },
+            {
+              "value": "none",
+              "label": "No preview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Information accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Delivery and gifting"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Content",
+          "default": "<p>Delivery options and charges are shown at checkout. Add a gift message to make it personal.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

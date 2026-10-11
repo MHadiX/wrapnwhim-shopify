@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "main": {
+      "type": "order-tracking"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

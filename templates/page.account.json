@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "main": {
+      "type": "account-entry"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

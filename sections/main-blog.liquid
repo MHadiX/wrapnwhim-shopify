@@ -1,0 +1,6 @@
+<section class="section page-width"><div class="page-heading"><p class="eyebrow">THOUGHTFUL LIVING</p><h1>{{ blog.title | escape }}</h1></div>{% paginate blog.articles by 9 %}<div class="image-grid columns-3">{% for article in blog.articles %}<article class="image-card"><a href="{{ article.url }}">{% render 'image', image: article.image, alt: article.title %}<h2>{{ article.title | escape }}</h2></a><p>{{ article.excerpt_or_content | strip_html | truncate: 180 }}</p></article>{% endfor %}</div>{% render 'pagination', paginate: paginate %}{% endpaginate %}</section>
+{% schema %}
+{
+  "name": "Journal"
+}
+{% endschema %}

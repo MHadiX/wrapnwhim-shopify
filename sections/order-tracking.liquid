@@ -1,0 +1,13 @@
+<section class="section page-width prose-page"><div class="page-heading"><p class="eyebrow">YOUR GIFT’S JOURNEY</p><h1>{{ page.title | default: 'Track your order.' | escape }}</h1></div><div class="rte">{{ page.content }}</div><p>Open the “View your order” link in your Shopify order confirmation email to see your order status and available tracking details.</p>{% if shop.customer_accounts_enabled %}<a class="button" href="{{ routes.account_url }}">View your orders →</a>{% endif %}{% if section.settings.support_page %}<p><a class="text-link" href="{{ section.settings.support_page.url }}">Need a little help? Contact our team →</a></p>{% endif %}</section>
+{% schema %}
+{
+  "name": "Order tracking guidance",
+  "settings": [
+    {
+      "type": "page",
+      "id": "support_page",
+      "label": "Contact page"
+    }
+  ]
+}
+{% endschema %}

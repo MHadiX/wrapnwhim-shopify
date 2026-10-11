@@ -1,0 +1,16 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "menu_1": "footer",
+        "menu_2": "footer"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

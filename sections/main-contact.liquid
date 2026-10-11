@@ -1,0 +1,19 @@
+<section class="section page-width contact-layout"><div><p class="eyebrow">A LITTLE GUIDANCE. A LOT OF CARE.</p><h1>{{ page.title | default: 'Let’s make it thoughtful.' | escape }}</h1><div class="rte">{{ page.content }}</div><p>{{ section.settings.text | escape }}</p>{% if section.settings.email != blank %}<p><a href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a></p>{% endif %}{% if settings.whatsapp_number != blank %}<a class="text-link" href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' | escape }}">Chat with us on WhatsApp ↗</a>{% endif %}</div><div>{% form 'contact' %}{% if form.posted_successfully? %}<p role="status" class="success">Thank you for your message. Our team will be in touch.</p>{% endif %}{% if form.errors %}<div class="form-error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}<label class="field" for="ContactName">Your name<input id="ContactName" type="text" name="contact[name]" autocomplete="name" value="{{ form.name | default: customer.name | escape }}" required></label><label class="field" for="ContactEmail">Email address<input id="ContactEmail" type="email" name="contact[email]" autocomplete="email" value="{{ form.email | default: customer.email | escape }}" required></label><label class="field" for="ContactPhone">Phone number (optional)<input id="ContactPhone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone | escape }}"></label><label class="field" for="ContactMessage">How can we help?<textarea id="ContactMessage" name="contact[body]" rows="6" required maxlength="3000">{{ form.body | escape }}</textarea></label><button class="button" type="submit">Send your message {% render 'icon', name: 'arrow' %}</button><p class="muted">Please don’t include payment details or other sensitive information.</p>{% endform %}</div></section>
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Need help choosing a gift, planning a surprise, or arranging something personal? We\u2019re here for you."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Contact email"
+    }
+  ]
+}
+{% endschema %}

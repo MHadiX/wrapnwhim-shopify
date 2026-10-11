@@ -1,0 +1,99 @@
+<section class="editorial-banner {% if section.settings.full_width %}full-banner{% else %}page-width section{% endif %} {{ section.settings.color }}"><div class="editorial-photo">{% if section.settings.mobile_image %}<picture><source media="(max-width: 749px)" srcset="{{ section.settings.mobile_image | image_url: width: 900 }}">{% render 'image', image: section.settings.image, fallback: section.settings.demo_asset, alt: section.settings.heading %}</picture>{% else %}{% render 'image', image: section.settings.image, fallback: section.settings.demo_asset, alt: section.settings.heading %}{% endif %}</div><div class="editorial-copy"><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading | escape }}</h2><div class="rte">{{ section.settings.text }}</div><a class="button {% if section.settings.color == 'navy' %}button-champagne{% endif %}" href="{{ section.settings.link | default: routes.all_products_collection_url }}">{{ section.settings.button | escape }} {% render 'icon', name: 'arrow' %}</a>{% if section.settings.countdown_end != blank %}<gift-countdown data-end="{{ section.settings.countdown_end | escape }}"><span data-countdown></span><span class="muted" data-countdown-error hidden>Set a valid end date with a timezone in the theme editor.</span></gift-countdown>{% endif %}</div></section>
+{% schema %}
+{
+  "name": "Editorial promotion",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "select",
+      "id": "demo_asset",
+      "label": "Demo photograph",
+      "default": "gifting-editorial.webp",
+      "options": [
+        {
+          "value": "gifting-editorial.webp",
+          "label": "Gifting editorial"
+        },
+        {
+          "value": "personal.webp",
+          "label": "Personal gift"
+        },
+        {
+          "value": "giftbox.webp",
+          "label": "Gift box"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "ONE OF A KIND. JUST LIKE THEM."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A gift with their name on it."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Turn a beautiful gift into something deeply personal. A name, a note, a little detail that says: this was made for you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button label",
+      "default": "Create your gift"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full-width banner",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color scheme",
+      "default": "beige",
+      "options": [
+        {
+          "value": "beige",
+          "label": "Soft beige"
+        },
+        {
+          "value": "navy",
+          "label": "Midnight navy"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "countdown_end",
+      "label": "Countdown end (ISO date with timezone, optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial promotion"
+    }
+  ]
+}
+{% endschema %}

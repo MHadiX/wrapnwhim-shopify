@@ -1,0 +1,16 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content"
+    },
+    "search": "Search",
+    "cart": "Shopping bag"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to gift bag",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable"
+    }
+  }
+}

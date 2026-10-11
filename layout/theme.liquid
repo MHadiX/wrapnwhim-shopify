@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_navy }}">
+  <title>{{ page_title | escape }}{% if current_tags %} — {{ current_tags | join: ', ' | escape }}{% endif %}{% if current_page != 1 %} — Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} — {{ shop.name | escape }}{% endunless %}</title>
+  {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  {% render 'social-meta' %}
+  {% if settings.favicon %}<link rel="icon" href="{{ settings.favicon | image_url: width: 32 }}">{% endif %}
+  {% unless settings.heading_font.system? %}{{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {% unless settings.body_font.system? %}{{ settings.body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {% style %}
+    {{ settings.heading_font | font_face: font_display: 'swap' }}
+    {{ settings.body_font | font_face: font_display: 'swap' }}
+    :root { --navy: {{ settings.color_navy }}; --champagne: {{ settings.color_champagne }}; --ivory: {{ settings.color_ivory }}; --beige: {{ settings.color_beige }}; --ink: {{ settings.color_text }}; --heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }}; --body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }}; }
+  {% endstyle %}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+  <script src="{{ 'core.js' | asset_url }}" defer></script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#MainContent">Skip to content</a>
+  {% sections 'header-group' %}
+  <noscript><nav class="page-width" aria-label="Quick navigation"><a href="{{ routes.root_url }}">Home</a> · <a href="{{ routes.all_products_collection_url }}">Shop gifts</a> · <a href="{{ routes.search_url }}">Search</a> · <a href="{{ routes.cart_url }}">Shopping bag</a></nav></noscript>
+  <main id="MainContent" tabindex="-1">{{ content_for_layout }}</main>
+  {% sections 'footer-group' %}
+  {% render 'drawers' %}
+  {% if settings.whatsapp_number != blank %}<a class="whatsapp" href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' | escape }}" target="_blank" rel="noopener" aria-label="Contact WrapnWhim on WhatsApp">{% render 'icon', name: 'message' %}<span>How can we help?</span></a>{% endif %}
+  <div class="sr-only" role="status" aria-live="polite" id="StoreStatus"></div>
+  <script id="StoreConfig" type="application/json">{"root": {{ routes.root_url | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }}}</script>
+</body></html>

@@ -1,0 +1,6 @@
+<section class="section page-width prose-page"><p class="eyebrow">YOUR WRAPNWHIM</p><h1>Your account.</h1>{% if shop.customer_accounts_enabled %}<p>Your orders and account details, all in one place.</p><a class="button" href="{{ routes.account_url }}">Continue to your account →</a>{% else %}<p>Use the order-status link in your confirmation email to review your order.</p>{% endif %}</section>
+{% schema %}
+{
+  "name": "Customer account entry"
+}
+{% endschema %}

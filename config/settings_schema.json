@@ -1,0 +1,94 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "WrapnWhim",
+    "theme_version": "1.0.0",
+    "theme_author": "WrapnWhim",
+    "theme_documentation_url": "https://github.com/MHadiX/wrapnwhim-shopify",
+    "theme_support_url": "https://github.com/MHadiX/wrapnwhim-shopify/issues"
+  },
+  {
+    "name": "Brand and typography",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading font",
+        "default": "cormorant_garamond_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body font",
+        "default": "inter_n4"
+      },
+      {
+        "type": "color",
+        "id": "color_navy",
+        "label": "Midnight navy",
+        "default": "#101B2D"
+      },
+      {
+        "type": "color",
+        "id": "color_champagne",
+        "label": "Champagne",
+        "default": "#D8BE91"
+      },
+      {
+        "type": "color",
+        "id": "color_ivory",
+        "label": "Warm ivory",
+        "default": "#FAF8F3"
+      },
+      {
+        "type": "color",
+        "id": "color_beige",
+        "label": "Soft beige",
+        "default": "#F1EBE1"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Charcoal",
+        "default": "#252525"
+      }
+    ]
+  },
+  {
+    "name": "Customer support",
+    "settings": [
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp number (international digits only)"
+      },
+      {
+        "type": "text",
+        "id": "delivery_message",
+        "label": "Delivery message",
+        "default": "Delivery timing is confirmed at checkout."
+      },
+      {
+        "type": "text",
+        "id": "cod_message",
+        "label": "Payment information",
+        "default": "Available payment options are shown at checkout."
+      },
+      {
+        "type": "page",
+        "id": "wishlist_page",
+        "label": "Wishlist page"
+      }
+    ]
+  }
+]

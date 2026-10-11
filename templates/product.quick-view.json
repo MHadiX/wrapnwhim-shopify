@@ -1,0 +1,11 @@
+{
+  "layout": false,
+  "sections": {
+    "main": {
+      "type": "quick-product"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

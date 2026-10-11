@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_image": true,
+        "eyebrow": "MADE TO MEAN MORE"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart"
+    },
+    "recommendations": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "A little something extra.",
+        "eyebrow": "COMPLETE THE GESTURE"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}

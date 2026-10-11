@@ -1,0 +1,12 @@
+{
+  "current": {
+    "heading_font": "cormorant_garamond_n4",
+    "body_font": "inter_n4",
+    "color_navy": "#101B2D",
+    "color_champagne": "#D8BE91",
+    "color_ivory": "#FAF8F3",
+    "color_beige": "#F1EBE1",
+    "color_text": "#252525"
+  },
+  "presets": {}
+}

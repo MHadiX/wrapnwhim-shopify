@@ -1,0 +1,17 @@
+<section class="collection-banner"><div class="page-width">{% render 'breadcrumbs' %}<p class="eyebrow">THE WRAPNWHIM COLLECTION</p><h1>{{ collection.title | escape }}</h1><div class="rte">{{ collection.description }}</div></div>{% if collection.image %}{{ collection.image | image_url: width: 2000 | image_tag: widths: '480,800,1200,1600,2000', sizes: '100vw', loading: 'eager' }}{% endif %}</section><section class="section page-width">{% render 'filters', results: collection %}<p class="muted">{{ collection.products_count }} gifts</p>{% paginate collection.products by section.settings.per_page %}<div class="product-grid">{% for product in collection.products %}{% render 'product-card', product: product %}{% else %}<div class="editorial-empty"><h2>No gifts match these filters.</h2><a class="text-link" href="{{ collection.url }}">Clear filters →</a></div>{% endfor %}</div>{% render 'pagination', paginate: paginate %}{% endpaginate %}</section>
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

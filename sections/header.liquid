@@ -1,0 +1,19 @@
+<header class="site-header"><div class="header-top page-width"><button type="button" class="icon-button mobile-only" data-open="MenuDrawer" aria-label="Open navigation" aria-controls="MenuDrawer">{% render 'icon', name: 'menu' %}</button><a href="{{ routes.root_url }}" class="wordmark" aria-label="{{ shop.name | escape }} home">{% if settings.logo %}{{ settings.logo | image_url: width: 360 | image_tag: widths: '180,360', alt: shop.name, width: settings.logo.width, height: settings.logo.height }}{% else %}Wrap<span>n</span>Whim<small>THE ART OF THOUGHTFUL GIFTING</small>{% endif %}</a><p class="header-note">{{ section.settings.tagline | escape }}</p><div class="header-actions"><button class="icon-button" type="button" data-open="SearchDrawer" aria-label="Search" aria-controls="SearchDrawer">{% render 'icon', name: 'search' %}</button>{% if shop.customer_accounts_enabled %}<a class="icon-button desktop-only" href="{{ routes.account_url }}" aria-label="Customer account">{% render 'icon', name: 'user' %}</a>{% endif %}<button class="icon-button desktop-only" type="button" data-open="WishlistDrawer" aria-label="Wishlist" aria-controls="WishlistDrawer">{% render 'icon', name: 'heart' %}</button><button class="icon-button cart-trigger" type="button" data-open="CartDrawer" aria-label="Open shopping bag" aria-controls="CartDrawer">{% render 'icon', name: 'bag' %}<span data-cart-count>{{ cart.item_count }}</span></button></div></div><nav class="desktop-nav page-width" aria-label="Main navigation">{% for link in section.settings.menu.links %}{% if link.links != blank %}<details class="mega-menu"><summary>{{ link.title | escape }} <span aria-hidden="true">⌄</span></summary><div class="mega-panel">{% for child in link.links %}<div><a href="{{ child.url }}">{{ child.title | escape }}</a>{% for grandchild in child.links %}<a class="muted" href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a>{% endfor %}</div>{% endfor %}<p class="mega-aside">A little thought.<br>A lasting memory.</p></div></details>{% else %}<a href="{{ link.url }}" {% if link.current %}aria-current="page"{% endif %}>{{ link.title | escape }}</a>{% endif %}{% else %}<a href="{{ routes.root_url }}">Home</a><a href="{{ routes.all_products_collection_url }}">Shop all gifts</a><a href="{{ routes.collections_url }}">Collections</a>{% endfor %}</nav></header><dialog id="MenuDrawer" class="drawer menu-drawer" aria-labelledby="MenuTitle"><div class="drawer-head"><h2 id="MenuTitle">Explore WrapnWhim</h2><button class="icon-button" type="button" data-close aria-label="Close navigation">{% render 'icon', name: 'close' %}</button></div><nav aria-label="Mobile navigation">{% for link in section.settings.menu.links %}{% if link.links != blank %}<details><summary>{{ link.title | escape }}</summary><a href="{{ link.url }}">View {{ link.title | escape }}</a>{% for child in link.links %}<a href="{{ child.url }}">{{ child.title | escape }}</a>{% for grandchild in child.links %}<a class="indented" href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a>{% endfor %}{% endfor %}</details>{% else %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endif %}{% else %}<a href="{{ routes.root_url }}">Home</a><a href="{{ routes.all_products_collection_url }}">Shop all gifts</a><a href="{{ routes.collections_url }}">Collections</a>{% endfor %}{% if shop.customer_accounts_enabled %}<a href="{{ routes.account_url }}">Your account</a>{% endif %}<button type="button" class="text-button" data-open="WishlistDrawer">Your wishlist</button></nav></dialog>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Meaningful gifts, memorable moments."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "name": {
+          "type": "personalization",
+          "settings": {
+            "label": "Recipient name",
+            "required": true,
+            "limit": 60,
+            "preview": "name"
+          }
+        },
+        "message": {
+          "type": "personalization",
+          "settings": {
+            "label": "Gift message",
+            "limit": 300,
+            "multiline": true,
+            "preview": "message"
+          }
+        },
+        "instructions": {
+          "type": "personalization",
+          "settings": {
+            "label": "Special instructions",
+            "limit": 300,
+            "multiline": true,
+            "preview": "none"
+          }
+        },
+        "delivery": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Delivery and gifting"
+          }
+        }
+      },
+      "block_order": [
+        "name",
+        "message",
+        "instructions",
+        "delivery"
+      ]
+    },
+    "related": {
+      "type": "product-recommendations"
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

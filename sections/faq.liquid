@@ -1,0 +1,39 @@
+<section class="section page-width prose-page"><div class="page-heading"><p class="eyebrow">GOOD TO KNOW</p><h1>{{ page.title | default: section.settings.heading | escape }}</h1></div><div class="rte">{{ page.content }}</div>{% for block in section.blocks %}<details class="faq" {{ block.shopify_attributes }}><summary>{{ block.settings.question | escape }}</summary><div class="rte">{{ block.settings.answer }}</div></details>{% endfor %}</section>
+{% schema %}
+{
+  "name": "FAQs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A little clarity, with care."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Can I include a gift message?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Eligible personalized gifts include message fields on the product page. You can review your message in the gift bag before checkout.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQs"
+    }
+  ]
+}
+{% endschema %}

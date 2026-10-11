@@ -1,0 +1,12 @@
+{% liquid
+  assign image_loading = loading | default: 'lazy'
+  assign image_sizes = sizes | default: '(min-width: 990px) 50vw, 100vw'
+  assign image_alt = alt | default: image.alt | default: shop.name
+  assign image_priority = 'auto'
+  if image_loading == 'eager'
+    assign image_priority = 'high'
+  endif
+  assign demo_asset = fallback | default: 'gifting-editorial.webp'
+  assign demo_name = demo_asset | remove: '.webp'
+%}
+{% if image != blank %}{{ image | image_url: width: 2400 | image_tag: widths: '320,480,640,800,1000,1200,1600,2000,2400', sizes: image_sizes, loading: image_loading, fetchpriority: image_priority, alt: image_alt, class: class }}{% else %}<img src="{{ demo_asset | asset_url }}" srcset="{% if demo_name == 'gifting-editorial' %}{{ 'gifting-editorial-480.webp' | asset_url }} 480w, {{ 'gifting-editorial-800.webp' | asset_url }} 800w, {{ 'gifting-editorial-1200.webp' | asset_url }} 1200w, {{ demo_asset | asset_url }} 1536w{% else %}{{ demo_name | append: '-320.webp' | asset_url }} 320w, {{ demo_asset | asset_url }} 512w{% endif %}" sizes="{{ image_sizes }}" width="{% if demo_name == 'gifting-editorial' %}1536{% else %}512{% endif %}" height="{% if demo_name == 'gifting-editorial' %}1024{% else %}512{% endif %}" loading="{{ image_loading }}" fetchpriority="{{ image_priority }}" alt="{{ image_alt | escape }}" class="{{ class }}">{% endif %}

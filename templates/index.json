@@ -1,0 +1,425 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {},
+      "blocks": {
+        "0": {
+          "type": "slide",
+          "settings": {
+            "heading": "The art of thoughtful gifting.",
+            "description": "For every person, every occasion, and every little reason to make someone smile.",
+            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
+            "button": "Discover the collection",
+            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "position": "left",
+            "mobile_position": "bottom"
+          }
+        },
+        "1": {
+          "type": "slide",
+          "settings": {
+            "heading": "Gifts made personal.",
+            "description": "Their name. Your words. A keepsake with a story only you can tell.",
+            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
+            "button": "Discover the collection",
+            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "position": "left",
+            "mobile_position": "bottom"
+          }
+        },
+        "2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Beautifully wrapped. Beautifully remembered.",
+            "description": "Thoughtful details, from the first ribbon to the last little surprise.",
+            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
+            "button": "Discover the collection",
+            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "position": "left",
+            "mobile_position": "bottom"
+          }
+        },
+        "3": {
+          "type": "slide",
+          "settings": {
+            "heading": "Celebrate every occasion.",
+            "description": "The milestones, the moments, and the just-because days in between.",
+            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
+            "button": "Discover the collection",
+            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "position": "left",
+            "mobile_position": "bottom"
+          }
+        },
+        "4": {
+          "type": "slide",
+          "settings": {
+            "heading": "Curated gift boxes.",
+            "description": "Beautiful things, thoughtfully brought together. A whole box of joy.",
+            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
+            "button": "Discover the collection",
+            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "position": "left",
+            "mobile_position": "bottom"
+          }
+        }
+      },
+      "block_order": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "trust": {
+      "type": "trust-bar",
+      "settings": {},
+      "blocks": {
+        "0": {
+          "type": "highlight",
+          "settings": {
+            "icon": "gift",
+            "heading": "Thoughtfully curated",
+            "text": "Little details. Lasting impressions."
+          }
+        },
+        "1": {
+          "type": "highlight",
+          "settings": {
+            "icon": "heart",
+            "heading": "Made personal",
+            "text": "Your words, beautifully expressed."
+          }
+        },
+        "2": {
+          "type": "highlight",
+          "settings": {
+            "icon": "truck",
+            "heading": "Gifting across Pakistan",
+            "text": "Delivery options at checkout."
+          }
+        },
+        "3": {
+          "type": "highlight",
+          "settings": {
+            "icon": "message",
+            "heading": "Here to help",
+            "text": "A little guidance goes a long way."
+          }
+        }
+      },
+      "block_order": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "categories": {
+      "type": "image-grid",
+      "settings": {
+        "heading": "Find their kind of joy.",
+        "eyebrow": "A LITTLE SOMETHING FOR EVERYONE",
+        "columns": 4,
+        "link": "/collections"
+      },
+      "blocks": {
+        "0": {
+          "type": "card",
+          "settings": {
+            "title": "Personalized Gifts",
+            "demo_asset": "personal.webp"
+          }
+        },
+        "1": {
+          "type": "card",
+          "settings": {
+            "title": "Birthday Gifts",
+            "demo_asset": "wedding.webp"
+          }
+        },
+        "2": {
+          "type": "card",
+          "settings": {
+            "title": "Anniversary Gifts",
+            "demo_asset": "flowers.webp"
+          }
+        },
+        "3": {
+          "type": "card",
+          "settings": {
+            "title": "Gift Boxes",
+            "demo_asset": "giftbox.webp"
+          }
+        },
+        "4": {
+          "type": "card",
+          "settings": {
+            "title": "Flowers & Bouquets",
+            "demo_asset": "flowers.webp"
+          }
+        },
+        "5": {
+          "type": "card",
+          "settings": {
+            "title": "Chocolates & Sweet Treats",
+            "demo_asset": "chocolates.webp"
+          }
+        },
+        "6": {
+          "type": "card",
+          "settings": {
+            "title": "Home & Lifestyle Gifts",
+            "demo_asset": "lifestyle.webp"
+          }
+        },
+        "7": {
+          "type": "card",
+          "settings": {
+            "title": "Corporate Gifts",
+            "demo_asset": "giftbox.webp"
+          }
+        },
+        "8": {
+          "type": "card",
+          "settings": {
+            "title": "Wedding Gifts",
+            "demo_asset": "wedding.webp"
+          }
+        },
+        "9": {
+          "type": "card",
+          "settings": {
+            "title": "Gifts for Him",
+            "demo_asset": "lifestyle.webp"
+          }
+        },
+        "10": {
+          "type": "card",
+          "settings": {
+            "title": "Gifts for Her",
+            "demo_asset": "personal.webp"
+          }
+        },
+        "11": {
+          "type": "card",
+          "settings": {
+            "title": "Seasonal Collections",
+            "demo_asset": "giftbox.webp"
+          }
+        }
+      },
+      "block_order": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ]
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Small gestures. Beautiful gifts.",
+        "eyebrow": "THE WRAPNWHIM EDIT"
+      }
+    },
+    "personal": {
+      "type": "editorial-banner",
+      "settings": {
+        "demo_asset": "personal.webp",
+        "heading": "A gift with their name on it.",
+        "button": "Create your gift"
+      }
+    },
+    "occasions": {
+      "type": "image-grid",
+      "settings": {
+        "heading": "For every chapter of their story.",
+        "eyebrow": "CELEBRATE THE MOMENT",
+        "columns": 6,
+        "round": true
+      },
+      "blocks": {
+        "0": {
+          "type": "card",
+          "settings": {
+            "title": "Birthdays",
+            "demo_asset": "personal.webp"
+          }
+        },
+        "1": {
+          "type": "card",
+          "settings": {
+            "title": "Anniversaries",
+            "demo_asset": "wedding.webp"
+          }
+        },
+        "2": {
+          "type": "card",
+          "settings": {
+            "title": "Weddings",
+            "demo_asset": "flowers.webp"
+          }
+        },
+        "3": {
+          "type": "card",
+          "settings": {
+            "title": "Graduations",
+            "demo_asset": "giftbox.webp"
+          }
+        },
+        "4": {
+          "type": "card",
+          "settings": {
+            "title": "Baby Showers",
+            "demo_asset": "flowers.webp"
+          }
+        },
+        "5": {
+          "type": "card",
+          "settings": {
+            "title": "Congratulations",
+            "demo_asset": "chocolates.webp"
+          }
+        },
+        "6": {
+          "type": "card",
+          "settings": {
+            "title": "Thank You",
+            "demo_asset": "lifestyle.webp"
+          }
+        },
+        "7": {
+          "type": "card",
+          "settings": {
+            "title": "Eid",
+            "demo_asset": "giftbox.webp"
+          }
+        },
+        "8": {
+          "type": "card",
+          "settings": {
+            "title": "Valentine\u2019s Day",
+            "demo_asset": "wedding.webp"
+          }
+        },
+        "9": {
+          "type": "card",
+          "settings": {
+            "title": "Mother\u2019s Day",
+            "demo_asset": "lifestyle.webp"
+          }
+        },
+        "10": {
+          "type": "card",
+          "settings": {
+            "title": "Father\u2019s Day",
+            "demo_asset": "personal.webp"
+          }
+        }
+      },
+      "block_order": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    "bestsellers": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "The gifts everyone comes back for.",
+        "eyebrow": "MUCH-LOVED FAVORITES"
+      }
+    },
+    "builder": {
+      "type": "editorial-banner",
+      "settings": {
+        "heading": "Their favorites. Your finishing touch.",
+        "eyebrow": "BUILD A BOX OF HAPPINESS",
+        "text": "<p>Choose a beautiful box, fill it with their favorite little luxuries, and finish with a note from the heart.</p>",
+        "button": "Build your gift box",
+        "color": "navy",
+        "demo_asset": "giftbox.webp"
+      }
+    },
+    "reviews": {
+      "type": "testimonials",
+      "settings": {}
+    },
+    "inspiration": {
+      "type": "gallery",
+      "settings": {},
+      "blocks": {
+        "0": {
+          "type": "photo",
+          "settings": {
+            "demo_asset": "personal.webp",
+            "alt": "Personal gifting inspiration"
+          }
+        },
+        "1": {
+          "type": "photo",
+          "settings": {
+            "demo_asset": "flowers.webp",
+            "alt": "Flowers gifting inspiration"
+          }
+        },
+        "2": {
+          "type": "photo",
+          "settings": {
+            "demo_asset": "giftbox.webp",
+            "alt": "Giftbox gifting inspiration"
+          }
+        },
+        "3": {
+          "type": "photo",
+          "settings": {
+            "demo_asset": "chocolates.webp",
+            "alt": "Chocolates gifting inspiration"
+          }
+        }
+      },
+      "block_order": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "categories",
+    "featured",
+    "personal",
+    "occasions",
+    "bestsellers",
+    "builder",
+    "reviews",
+    "inspiration",
+    "newsletter"
+  ]
+}

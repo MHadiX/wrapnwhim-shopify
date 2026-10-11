@@ -1,0 +1,11 @@
+node_modules/**
+scripts/**
+tests/**
+docs/**
+test-results/**
+package.json
+package-lock.json
+README.md
+.gitignore
+.shopifyignore
+*.zip
