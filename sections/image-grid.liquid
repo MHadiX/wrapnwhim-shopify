@@ -1,4 +1,16 @@
-<section class="section page-width"><div class="section-heading"><div><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading | escape }}</h2></div>{% if section.settings.link != blank %}<a class="text-link" href="{{ section.settings.link }}">{{ section.settings.link_label | escape }} ↗</a>{% endif %}</div><div class="image-grid columns-{{ section.settings.columns }} {% if section.settings.round %}round-grid{% endif %}">{% for block in section.blocks %}{% assign destination = block.settings.link | default: block.settings.collection.url | default: routes.collections_url %}<a class="image-card" href="{{ destination }}" {{ block.shopify_attributes }}><div class="image-card-photo">{% assign card_image = block.settings.image | default: block.settings.collection.featured_image %}{% render 'image', image: card_image, fallback: block.settings.demo_asset, alt: block.settings.title, sizes: '(min-width: 990px) 25vw, 50vw' %}</div><h3>{{ block.settings.title | default: block.settings.collection.title | escape }} <span aria-hidden="true">↗</span></h3>{% if block.settings.subtitle != blank %}<p>{{ block.settings.subtitle | escape }}</p>{% endif %}</a>{% endfor %}</div></section>
+<section class="section page-width catalog-section">
+  <div class="section-heading"><div><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading | escape }}</h2></div>{% if section.settings.link != blank %}<a class="text-link" href="{{ section.settings.link }}">{{ section.settings.link_label | escape }} {% render 'icon', name: 'arrow' %}</a>{% endif %}</div>
+  {% if section.settings.layout == 'rail' %}
+    <scroll-carousel><div class="collection-rail {% if section.settings.round %}round-grid{% endif %}" data-scroll>{% for block in section.blocks %}{% render 'collection-card', block: block %}{% endfor %}</div><div class="carousel-controls"><button class="icon-button" data-prev type="button" aria-label="Previous collections">←</button><button class="icon-button" data-next type="button" aria-label="Next collections">→</button></div></scroll-carousel>
+  {% else %}
+    <div class="image-grid columns-{{ section.settings.columns }} {% if section.settings.round %}round-grid{% endif %}">
+      {% for block in section.blocks %}{% if section.settings.collapse and forloop.index > section.settings.initial_cards %}{% continue %}{% endif %}{% render 'collection-card', block: block %}{% endfor %}
+    </div>
+    {% if section.settings.collapse and section.blocks.size > section.settings.initial_cards %}
+      <details class="catalog-more"><summary class="button button-outline">{{ section.settings.more_label | escape }}</summary><div class="image-grid columns-{{ section.settings.columns }} {% if section.settings.round %}round-grid{% endif %}">{% for block in section.blocks %}{% if forloop.index > section.settings.initial_cards %}{% render 'collection-card', block: block %}{% endif %}{% endfor %}</div></details>
+    {% endif %}
+  {% endif %}
+</section>
 {% schema %}
 {
   "name": "Categories or occasions",
@@ -40,6 +52,43 @@
       "id": "round",
       "label": "Circular images",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Card layout",
+      "default": "grid",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "rail",
+          "label": "Scrollable row"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse",
+      "label": "Collapse additional cards",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "initial_cards",
+      "label": "Cards before expansion",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Expand button label",
+      "default": "View all categories"
     }
   ],
   "max_blocks": 16,

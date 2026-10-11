@@ -4,6 +4,8 @@ A custom Online Store 2.0 theme for a premium Pakistan gifting storefront. Midni
 
 The repository contains the actual installable Liquid theme. The local browser renderer is a **QA fixture**, not a substitute storefront, backend or checkout.
 
+Version 1.1.0 refreshes the page layouts, category cards, product cards and responsive shopping controls. See [layout changes](docs/LAYOUT-REFRESH.md).
+
 ## Develop and validate
 
 Requires Node.js 22.12+ (Node 24 recommended). No runtime npm dependencies are shipped to shoppers.

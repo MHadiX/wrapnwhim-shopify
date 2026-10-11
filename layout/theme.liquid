@@ -10,12 +10,12 @@
   {% if settings.favicon %}<link rel="icon" href="{{ settings.favicon | image_url: width: 32 }}">{% endif %}
   {% unless settings.heading_font.system? %}{{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
   {% unless settings.body_font.system? %}{{ settings.body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
   {% style %}
     {{ settings.heading_font | font_face: font_display: 'swap' }}
     {{ settings.body_font | font_face: font_display: 'swap' }}
-    :root { --navy: {{ settings.color_navy }}; --champagne: {{ settings.color_champagne }}; --ivory: {{ settings.color_ivory }}; --beige: {{ settings.color_beige }}; --ink: {{ settings.color_text }}; --heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }}; --body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }}; }
+    :root { --navy: {{ settings.color_navy }}; --champagne: {{ settings.color_champagne }}; --ivory: {{ settings.color_ivory }}; --beige: {{ settings.color_beige }}; --ink: {{ settings.color_text }}; --card-ratio: {{ settings.card_ratio | default: '1 / 1' }}; --card-image-fit: {{ settings.card_image_fit | default: 'contain' }}; --heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }}; --body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }}; }
   {% endstyle %}
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
   {{ content_for_header }}
   <script src="{{ 'core.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>

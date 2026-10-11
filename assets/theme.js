@@ -56,6 +56,23 @@
       storage.set('wrapnwhim-wishlist', saved); syncHearts(); status(saved.includes(handle) ? 'Gift saved to your wishlist.' : 'Gift removed from your wishlist.');
       document.querySelectorAll('wishlist-list').forEach(list => list.render());
     }
+    const quickAdd = event.target.closest('[data-quick-add]');
+    if (quickAdd && !quickAdd.disabled) {
+      const error = quickAdd.closest('.product-card').querySelector('[data-card-error]');
+      const label = quickAdd.innerHTML;
+      quickAdd.disabled = true; quickAdd.setAttribute('aria-busy', 'true');
+      quickAdd.textContent = 'Adding…'; error.textContent = '';
+      try {
+        const result = await jsonPost(`${root}cart/add.js`, {
+          items: [{ id: Number(quickAdd.dataset.quickAdd), quantity: Number(quickAdd.dataset.quantity) || 1 }],
+          sections: ['cart-drawer'], sections_url: location.pathname
+        });
+        try { await refreshCart(result.sections?.['cart-drawer']); }
+        catch { location.assign(`${root}cart`); return; }
+        openDialog('CartDrawer'); status('Your gift was added to the bag.');
+      } catch (failure) { error.textContent = failure.message; }
+      finally { quickAdd.disabled = false; quickAdd.removeAttribute('aria-busy'); quickAdd.innerHTML = label; }
+    }
     const quick = event.target.closest('[data-quick-view]');
     if (quick) {
       quick.disabled = true;
@@ -466,6 +483,18 @@
     const update = () => { const province = document.getElementById(select.dataset.provinceId); const pairs = JSON.parse(select.selectedOptions[0]?.dataset.provinces || '[]'); province.replaceChildren(); pairs.forEach(([value, label]) => province.append(el('option', { value }, label))); province.disabled = !pairs.length; if (province.dataset.default) province.value = province.dataset.default; };
     select.value = select.dataset.default; update(); select.addEventListener('change', update);
   });
-  document.addEventListener('shopify:section:load', syncHearts);
+  // Keep native details usable without JavaScript; collapse only the mobile filter panel.
+  const desktopCatalog = matchMedia('(min-width: 990px)');
+  function initCatalogFilters(scope = document) {
+    scope.querySelectorAll('[data-catalog-filters]').forEach(panel => {
+      if (panel.dataset.initialized) return;
+      panel.dataset.initialized = 'true'; panel.open = desktopCatalog.matches;
+    });
+  }
+  desktopCatalog.addEventListener('change', () => {
+    document.querySelectorAll('[data-catalog-filters]').forEach(panel => panel.open = desktopCatalog.matches);
+  });
+  document.addEventListener('shopify:section:load', event => { syncHearts(); initCatalogFilters(event.target); });
+  initCatalogFilters();
   syncHearts();
 })();

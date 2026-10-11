@@ -122,8 +122,12 @@
       "settings": {
         "heading": "Find their kind of joy.",
         "eyebrow": "A LITTLE SOMETHING FOR EVERYONE",
-        "columns": 4,
-        "link": "/collections"
+        "columns": 6,
+        "link": "/collections",
+        "collapse": true,
+        "initial_cards": 6,
+        "layout": "grid",
+        "more_label": "View all gift categories"
       },
       "blocks": {
         "0": {
@@ -230,7 +234,8 @@
       "type": "featured-products",
       "settings": {
         "heading": "Small gestures. Beautiful gifts.",
-        "eyebrow": "THE WRAPNWHIM EDIT"
+        "eyebrow": "THE WRAPNWHIM EDIT",
+        "fallback_all": true
       }
     },
     "personal": {
@@ -247,7 +252,9 @@
         "heading": "For every chapter of their story.",
         "eyebrow": "CELEBRATE THE MOMENT",
         "columns": 6,
-        "round": true
+        "round": false,
+        "layout": "rail",
+        "collapse": false
       },
       "blocks": {
         "0": {
@@ -415,8 +422,8 @@
     "categories",
     "featured",
     "personal",
-    "occasions",
     "bestsellers",
+    "occasions",
     "builder",
     "reviews",
     "inspiration",

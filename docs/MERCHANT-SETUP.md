@@ -2,7 +2,7 @@
 
 ## Install on an unpublished theme
 
-Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-1.0.0.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
+Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-1.1.0.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
 
 ```sh
 npx shopify theme push --store your-store.myshopify.com --unpublished
@@ -19,11 +19,19 @@ Authenticate interactively with a Shopify account authorized for the store. Neve
 5. Add genuine shipping, returns, privacy and terms policies in Admin. Footer policy links appear automatically when policy content exists. Have the merchant review policies; the theme does not invent legal commitments.
 6. In theme settings set logos, favicon, fonts, colors, delivery/payment messages and an international WhatsApp number using digits only, e.g. a Pakistan number beginning `92` without a local leading zero. Leave it empty to hide WhatsApp. Add actual support email, phone and social URLs in Footer/Contact sections.
 
+## Card and layout controls
+
+Theme settings → Product cards controls image proportions (square, portrait or tall portrait) and image fit (show full product or fill the image). All product cards share these settings. Single default-variant gifts have direct Ajax add; gifts with options use the quick-view form; configured personalization sends customers to the full product page. Minimum purchase quantities are respected and shown on the quick-add button.
+
+Each Categories or occasions section offers a grid or scrollable row, desktop column count, optional circular images and optional expansion of additional cards. The homepage initially shows six category cards, retains all twelve behind the expansion control, and uses a scrollable row for eleven occasions. All collection destinations remain editable.
+
+Collection and search pages keep native filters in a desktop sidebar and use an expandable filter panel on mobile. Configure available filter types in Shopify; the layout does not create unsupported filters. Product prices appear before option selectors, and product galleries reserve image space to avoid layout shifts.
+
 ## Products and collections
 
 Create real products, images, variants, prices, inventory, tax and shipping classifications. Assign the default product template, or `personalized` where required. Add variant photos for each meaningful color, wrapping or card design. Upload photographs matching the actual product; the bundled imagery is decorative demo content.
 
-Create the category and occasion collections you sell. The homepage includes all requested category/occasion titles, but **no collection handle is assumed**: select each collection or link in the card's editor block. Until configured, cards route to the collection directory. Select collections in featured products and best sellers. No invented products or prices are rendered if a collection is missing.
+Create the category and occasion collections you sell. The homepage includes all requested category/occasion titles, but **no collection handle is assumed**: select each collection or link in the card's editor block. Until configured, cards route to the collection directory. Select collections in featured products and best sellers. The initial featured section can fall back to Shopify’s actual all-products collection; disable its “Use all products when no collection is selected” setting if desired. Unconfigured product sections are hidden on the published storefront and show setup guidance in the editor. No invented products or prices are rendered.
 
 Install Shopify Search & Discovery (Shopify's supported free app) or configure native storefront filters using your supported Admin interface. Enable Availability, Price, Product type and any relevant product-option/metafield filters. The theme renders `collection.filters` and `search.filters`, sorts using Shopify's `sort_options`, and paginates. Empty filter lists mean the merchant has not enabled applicable filters, or Shopify does not support filters for that collection.
 

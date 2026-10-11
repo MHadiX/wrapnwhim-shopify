@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fixtureServer } from './fixture-server.mjs';
+import { base, renderTemplate, products } from './theme-fixture.mjs';
 const fixture=await fixtureServer();
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 const results=[]; const errors=[];
@@ -95,11 +96,56 @@ try{
   assert.equal(fixture.cart().note,'Deliver with care');assert.ok(fixture.events.some(e=>e.path==='/cart'&&e.body.checkout));assert.equal(fixture.cart().items[0].properties['Gift message'],'A box of joy');
  });
  await check('Sorting submits native Shopify query parameters; contact and newsletter use native form validation',async()=>{
-  await go('/collections/all');await page.locator('select[name=sort_by]').selectOption('price-ascending');await page.locator('.collection-filters [type=submit]').click();assert.match(page.url(),/sort_by=price-ascending/);
+  await go('/collections/all');await page.locator('.filter-toggle').click();await page.locator('select[name=sort_by]').selectOption('price-ascending');await page.locator('.collection-filters [type=submit]').click();assert.match(page.url(),/sort_by=price-ascending/);
   await go('/pages/contact');assert.equal(await page.locator('#ContactEmail').getAttribute('type'),'email');await page.locator('#ContactEmail').fill('invalid');assert.equal(await page.locator('#ContactEmail').evaluate(n=>n.checkValidity()),false);assert.equal(await page.locator('#ContactMessage').getAttribute('required'),'');
   await go('/');assert.equal(await page.locator('.newsletter-section input[name="contact[accepts_marketing]"]').inputValue(),'true');assert.equal(await page.locator('.newsletter-section input[type=email]').getAttribute('required'),'');
  });
+ await check('Category expansion and occasion carousel keep every destination accessible',async()=>{
+  await go('/');
+  // The fixture renderer omits Shopify section wrappers, so locate by its unique details.
+  const more=page.locator('.catalog-more').first();assert.equal(await more.locator('.collection-card').first().isVisible(),false);
+  await more.locator('summary').click();assert.equal(await more.locator('.collection-card').count(),6);assert.equal(await more.locator('.collection-card').first().isVisible(),true);
+  const rail=page.locator('.collection-rail');assert.equal(await rail.locator('.collection-card').count(),11);
+  await rail.locator('..').locator('[data-next]').click();await page.waitForFunction(()=>document.querySelector('.collection-rail').scrollLeft>0);
+ });
+ await check('Collection cards have square media and visible, aligned purchase actions',async()=>{
+  await go('/collections/all');
+  for(const width of [320,390,768,1440]){
+   await page.setViewportSize({width,height:900});
+   const cards=await page.locator('.product-grid .product-card').evaluateAll(nodes=>nodes.map(node=>{
+    const image=node.querySelector('.product-card-media').getBoundingClientRect(),info=node.querySelector('.product-card-info').getBoundingClientRect(),action=node.querySelector('.card-actions').getBoundingClientRect();
+    return {ratio:image.width/image.height,infoBottom:info.bottom,actionTop:action.top,actionHeight:action.height};
+   }));
+   assert.ok(cards.every(card=>Math.abs(card.ratio-1)<.01&&card.actionTop>=card.infoBottom-1&&card.actionHeight>=44));
+   assert.ok(Math.abs(cards[0].actionTop-cards[1].actionTop)<1,'same-row buttons align');
+  }
+ });
+ await check('Filter panels adapt to mobile and desktop without shifting the desktop grid',async()=>{
+  await go('/collections/all');assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),true);
+  const before=await page.locator('.product-grid').boundingBox();await page.locator('.filter-group summary').first().click();const after=await page.locator('.product-grid').boundingBox();assert.equal(before.x,after.x);assert.equal(before.width,after.width);
+  await page.setViewportSize({width:390,height:844});assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),false);
+  await page.locator('.filter-toggle').click();assert.equal(await page.locator('select[name=sort_by]').isVisible(),true);
+  await page.setViewportSize({width:1440,height:900});assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),true);
+ });
+ await check('Card quick add submits real variant minimum quantity and shows server errors',async()=>{
+  fixture.reset();await go('/collections/all');await page.locator('[data-quick-add]').click();await page.waitForFunction(()=>document.querySelector('#CartDrawer').open);
+  assert.equal(fixture.cart().items[0].variant.id,50);assert.equal(fixture.cart().items[0].quantity,2);await page.keyboard.press('Escape');
+  fixture.reset();fixture.rejectAdd();await page.locator('[data-quick-add]').click();await page.waitForFunction(()=>document.querySelector('[data-quick-add]').closest('.product-card').querySelector('[data-card-error]').textContent.length>0);
+  assert.equal(fixture.cart().items.length,0);assert.match(await page.locator('[data-quick-add]').locator('..').locator('[data-card-error]').textContent(),/no longer available/);assert.equal(await page.locator('[data-quick-add]').isEnabled(),true);
+ });
+ await check('Search results render product cards with functional product links',async()=>{
+  await go('/search');assert.equal(await page.locator('.product-grid .product-card').count(),5);assert.equal(await page.locator('.product-card h3 a').first().getAttribute('href'),'/products/gift-1');
+ });
  await page.setViewportSize({width:1440,height:1000});await go('/');await page.screenshot({path:'test-results/home-desktop.png',fullPage:true});await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-mobile.png',fullPage:true});
+ await check('Theme editor font, palette and product image settings override stylesheet defaults',async()=>{
+  const preview='/qa-editor-settings';
+  const html=await renderTemplate('search',{search:{performed:true,terms:'gift',results:products,results_count:products.length,filters:[],sort_options:[],default_sort_by:'manual'},settings:{...base.settings,color_navy:'#123456',card_ratio:'4 / 5',card_image_fit:'cover',body_font:{family:'Verdana',fallback_families:'sans-serif',system:true}}});
+  await page.route(fixture.url+preview,route=>route.fulfill({status:200,contentType:'text/html',body:html}));
+  await go(preview);
+  const styles=await page.evaluate(()=>{const media=document.querySelector('.product-card-media').getBoundingClientRect();return {ratio:media.width/media.height,fit:getComputedStyle(document.querySelector('.product-primary')).objectFit,font:getComputedStyle(document.body).fontFamily,navy:getComputedStyle(document.documentElement).getPropertyValue('--navy').trim()};});
+  assert.ok(Math.abs(styles.ratio-.8)<.01);assert.equal(styles.fit,'cover');assert.match(styles.font,/Verdana/);assert.equal(styles.navy,'#123456');
+  await page.unroute(fixture.url+preview);
+ });
  await check('No browser JavaScript errors during tested flows',async()=>assert.deepEqual(errors,[]));
 }finally{
  await writeFile('test-results/browser-results.json',JSON.stringify({environment:'Local Liquid fixture renderer with mocked Shopify APIs. Not a live Shopify store.',results},null,2));

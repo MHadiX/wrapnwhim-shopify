@@ -1,1 +1,42 @@
-<article class="product-card"><div class="product-card-media"><a href="{{ product.url }}" tabindex="-1" aria-hidden="true">{% if product.featured_image %}{{ product.featured_image | image_url: width: 800 | image_tag: widths: '240,360,480,640,800', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', class: 'product-primary' }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}{% endif %}{% if product.images[1] %}{{ product.images[1] | image_url: width: 800 | image_tag: widths: '360,640,800', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', class: 'product-secondary' }}{% endif %}</a>{% unless product.available %}<span class="badge">Sold out</span>{% elsif product.compare_at_price > product.price %}<span class="badge">Special price</span>{% endunless %}<button type="button" class="icon-button wishlist-button" data-wishlist="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }}">{% render 'icon', name: 'heart' %}</button><div class="card-actions"><button class="button button-light" type="button" data-quick-view="{{ product.url }}">Choose your gift</button></div></div><div class="product-card-info"><p class="eyebrow">{{ product.type | escape }}</p><h3><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>{% render 'price', product: product %}{% if product.metafields.reviews.rating.value %}<p class="rating" aria-label="{{ product.metafields.reviews.rating.value.rating }} out of {{ product.metafields.reviews.rating.value.scale_max }} stars">★ {{ product.metafields.reviews.rating.value.rating }} <span>({{ product.metafields.reviews.rating_count | default: 0 }})</span></p>{% endif %}</div></article>
+{% liquid
+  assign personalized = false
+  if product.metafields.custom.personalization_enabled.value or product.metafields.custom.photo_upload_enabled.value or product.template_suffix == 'personalized'
+    assign personalized = true
+  endif
+%}
+<article class="product-card">
+  <div class="product-card-media">
+    <a href="{{ product.url }}" class="product-image-link" tabindex="-1" aria-hidden="true">
+      {% if product.featured_image %}
+        {{ product.featured_image | image_url: width: 1000 | image_tag: widths: '240,360,480,640,800,1000', sizes: '(min-width: 1100px) 25vw, (min-width: 750px) 33vw, 50vw', loading: 'lazy', class: 'product-primary' }}
+      {% else %}{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}{% endif %}
+      {% if product.images[1] %}
+        {{ product.images[1] | image_url: width: 1000 | image_tag: widths: '360,640,800,1000', sizes: '(min-width: 1100px) 25vw, (min-width: 750px) 33vw, 50vw', loading: 'lazy', class: 'product-secondary' }}
+      {% endif %}
+    </a>
+    {% unless product.available %}<span class="badge">Sold out</span>{% elsif product.compare_at_price > product.price %}<span class="badge">Sale</span>{% endunless %}
+    <button type="button" class="icon-button wishlist-button" data-wishlist="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }}">{% render 'icon', name: 'heart' %}</button>
+    <button type="button" class="icon-button card-quick-view" data-quick-view="{{ product.url }}" aria-label="Quick view of {{ product.title | escape }}">{% render 'icon', name: 'search' %}</button>
+  </div>
+  <div class="product-card-info">
+    {% if product.type != blank %}<p class="card-category">{{ product.type | escape }}</p>{% endif %}
+    <h3><a href="{{ product.url }}" title="{{ product.title | escape }}">{{ product.title | escape }}</a></h3>
+    {% render 'price', product: product %}
+    {% if product.metafields.reviews.rating.value %}
+      <p class="rating" aria-label="{{ product.metafields.reviews.rating.value.rating }} out of {{ product.metafields.reviews.rating.value.scale_max }} stars">★ {{ product.metafields.reviews.rating.value.rating }} <span>({{ product.metafields.reviews.rating_count | default: 0 }})</span></p>
+    {% endif %}
+  </div>
+  <div class="card-actions">
+    {% if personalized %}
+      <a class="button button-outline" href="{{ product.url }}">Personalize your gift {% render 'icon', name: 'arrow' %}</a>
+    {% elsif product.available == false %}
+      <button class="button button-outline" type="button" disabled>Sold out</button>
+    {% elsif product.has_only_default_variant and product.requires_selling_plan != true %}
+      <button class="button button-outline" type="button" data-quick-add="{{ product.selected_or_first_available_variant.id }}" data-quantity="{{ product.selected_or_first_available_variant.quantity_rule.min | default: 1 }}">Add {% if product.selected_or_first_available_variant.quantity_rule.min > 1 %}{{ product.selected_or_first_available_variant.quantity_rule.min }} {% endif %}to gift bag {% render 'icon', name: 'bag' %}</button>
+    {% else %}
+      <button class="button button-outline" type="button" data-quick-view="{{ product.url }}">Choose options {% render 'icon', name: 'arrow' %}</button>
+    {% endif %}
+    <p class="form-error" data-card-error role="alert"></p>
+    <noscript><a class="text-link" href="{{ product.url }}">View gift details →</a></noscript>
+  </div>
+</article>

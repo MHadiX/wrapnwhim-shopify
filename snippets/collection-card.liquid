@@ -1,0 +1,9 @@
+{% liquid
+  assign destination = block.settings.link | default: block.settings.collection.url | default: routes.collections_url
+  assign card_image = block.settings.image | default: block.settings.collection.featured_image
+  assign card_title = block.settings.title | default: block.settings.collection.title
+%}
+<a class="collection-card" href="{{ destination }}" {{ block.shopify_attributes }}>
+  <div class="collection-card-media">{% render 'image', image: card_image, fallback: block.settings.demo_asset, alt: card_title, sizes: '(min-width: 1100px) 16vw, (min-width: 750px) 25vw, 50vw' %}</div>
+  <div class="collection-card-body"><h3>{{ card_title | escape }}</h3><span class="collection-card-arrow" aria-hidden="true">{% render 'icon', name: 'diagonal-arrow' %}</span>{% if block.settings.subtitle != blank %}<p>{{ block.settings.subtitle | escape }}</p>{% endif %}</div>
+</a>
