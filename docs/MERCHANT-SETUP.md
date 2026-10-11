@@ -2,13 +2,23 @@
 
 ## Install on an unpublished theme
 
-Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-2.0.0.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
+Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-2.0.1.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
 
 ```sh
 npx shopify theme push --store your-store.myshopify.com --unpublished
 ```
 
 Authenticate interactively with a Shopify account authorized for the store. Never commit a Theme Access password or Admin API credential. Review the theme in Shopify's preview and editor before publishing in Admin. No live deployment has been performed by this project.
+
+## Correct an existing 2.0.0 installation
+
+If the storefront shows `font_url can only be used with a font drop`, black/default typography, white announcement/hero backgrounds or an invisible primary button, use the corrected 2.0.1 ZIP. The layout now guards font filters and supplies brand defaults even when the active theme's global settings are missing or blank.
+
+To preserve existing theme-editor content, back up or duplicate the installed theme and replace `layout/theme.liquid` with the corrected file from this repository. That file alone fixes the reported font/brand rendering problem. Copy the updated `config/settings_schema.json` too if you want the optional Shopify-font control; preserve your existing `config/settings_data.json` rather than replacing merchant selections. Alternatively upload the complete 2.0.1 ZIP as a new unpublished theme, preview it and migrate your existing editor selections before publishing.
+
+The default typography now uses Georgia headings and Arial text, matching the supplied previews. To choose a different supported font, select it in Theme settings → Brand and typography and enable “Use selected Shopify fonts”. Invalid or missing selections safely use the default stack. Font selection changes the appearance intentionally.
+
+Navigation and catalog content come from actual Shopify menus, collections and products. The preview's six navigation entries are example menu content; an existing Main menu with Home, Catalog and Contact will retain those entries until edited in Shopify's navigation settings. No merchant data is overwritten by a layout-only fix.
 
 ## Merchant settings
 

@@ -9,7 +9,8 @@
     "color_text": "#252525",
     "card_ratio": "4 / 5",
     "card_image_fit": "cover",
-    "show_product_type": false
+    "show_product_type": false,
+    "use_shopify_fonts": false
   },
   "presets": {}
 }

@@ -11,7 +11,13 @@ engine.registerFilter('money_with_currency',value=>`PKR ${(value/100).toLocaleSt
 engine.registerFilter('json',value=>JSON.stringify(value ?? null));
 engine.registerFilter('image_url',(image,...args)=> image?.src || '/assets/giftbox.webp');
 engine.registerFilter('image_tag',(url,...args)=>{const attrs = Object.fromEntries(args.filter(Array.isArray)); return `<img src="${url}" alt="${attrs.alt||'Fixture gift'}" width="512" height="512" loading="${attrs.loading||'lazy'}" class="${attrs.class||''}">`;});
-engine.registerFilter('font_face',()=> '');engine.registerFilter('font_url',()=> '');engine.registerFilter('preload_tag',()=> '');
+function requireFont(font, filter) {
+ if (!font || typeof font!=='object' || !font.family) throw new TypeError(`${filter} can only be used with a font drop`);
+ return font;
+}
+engine.registerFilter('font_face',font=>{requireFont(font,'font_face');return '';});
+engine.registerFilter('font_url',font=>{requireFont(font,'font_url');return '/qa-selected-font.woff2';});
+engine.registerFilter('preload_tag',url=>`<link rel="preload" href="${url}" as="font" type="font/woff2" crossorigin="anonymous">`);
 engine.registerFilter('structured_data',product=>JSON.stringify({'@context':'https://schema.org','@type':'Product',name:product.title}));
 engine.registerFilter('placeholder_svg_tag',()=> '<svg viewBox="0 0 300 300" class="placeholder" aria-hidden="true"></svg>');
 engine.registerFilter('default_errors',errors=>errors ? '<p>Please check your information.</p>' : '');

@@ -2,19 +2,35 @@
 <html lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="{{ settings.color_navy }}">
+  <meta name="theme-color" content="{{ settings.color_navy | default: '#101B2D' }}">
   <title>{{ page_title | escape }}{% if current_tags %} — {{ current_tags | join: ', ' | escape }}{% endif %}{% if current_page != 1 %} — Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} — {{ shop.name | escape }}{% endunless %}</title>
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
   <link rel="canonical" href="{{ canonical_url }}">
   {% render 'social-meta' %}
   {% if settings.favicon %}<link rel="icon" href="{{ settings.favicon | image_url: width: 32 }}">{% endif %}
-  {% unless settings.heading_font.system? %}{{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
-  {% unless settings.body_font.system? %}{{ settings.body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {% if settings.use_shopify_fonts and settings.heading_font.family != blank %}
+    {% unless settings.heading_font.system? %}{{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {% endif %}
+  {% if settings.use_shopify_fonts and settings.body_font.family != blank %}
+    {% unless settings.body_font.system? %}{{ settings.body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
+  {% endif %}
   {{ 'theme.css' | asset_url | stylesheet_tag }}
   {% style %}
-    {{ settings.heading_font | font_face: font_display: 'swap' }}
-    {{ settings.body_font | font_face: font_display: 'swap' }}
-    :root { --navy: {{ settings.color_navy }}; --champagne: {{ settings.color_champagne }}; --ivory: {{ settings.color_ivory }}; --beige: {{ settings.color_beige }}; --ink: {{ settings.color_text }}; --card-ratio: {{ settings.card_ratio | default: '1 / 1' }}; --card-image-fit: {{ settings.card_image_fit | default: 'contain' }}; --heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }}; --body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }}; }
+    {% if settings.use_shopify_fonts and settings.heading_font.family != blank %}{{ settings.heading_font | font_face: font_display: 'swap' }}{% endif %}
+    {% if settings.use_shopify_fonts and settings.body_font.family != blank %}{{ settings.body_font | font_face: font_display: 'swap' }}{% endif %}
+    :root {
+      --navy: {{ settings.color_navy | default: '#101B2D' }};
+      --champagne: {{ settings.color_champagne | default: '#D8BE91' }};
+      --ivory: {{ settings.color_ivory | default: '#FAF8F3' }};
+      --beige: {{ settings.color_beige | default: '#F1EBE1' }};
+      --ink: {{ settings.color_text | default: '#252525' }};
+      --card-ratio: {{ settings.card_ratio | default: '4 / 5' }};
+      --card-image-fit: {{ settings.card_image_fit | default: 'cover' }};
+      --heading: Georgia, 'Times New Roman', serif;
+      --body: Arial, Helvetica, sans-serif;
+      {% if settings.use_shopify_fonts and settings.heading_font.family != blank %}--heading: {{ settings.heading_font.family | json }}, {{ settings.heading_font.fallback_families | default: 'serif' }};{% endif %}
+      {% if settings.use_shopify_fonts and settings.body_font.family != blank %}--body: {{ settings.body_font.family | json }}, {{ settings.body_font.fallback_families | default: 'sans-serif' }};{% endif %}
+    }
   {% endstyle %}
   {{ content_for_header }}
   <script src="{{ 'core.js' | asset_url }}" defer></script>

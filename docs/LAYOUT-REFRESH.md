@@ -22,4 +22,6 @@ The mobile product bar mirrors the selected variant’s price and availability. 
 
 See QA.md for current test evidence and pending Shopify-store checks. Automated checks cannot prove that an arbitrary merchant configuration is error-free; real store validation remains required for checkout, file retention, native emails, inventory and customer accounts.
 
-Upload WrapnWhim-2.0.0.zip as an unpublished theme, configure real collections/product imagery/navigation, and preview every template before publishing. Prior ZIP versions remain separate. Existing merchant content from the uploaded export is not migrated automatically.
+Upload WrapnWhim-2.0.1.zip as an unpublished theme, configure real collections/product imagery/navigation, and preview every template before publishing. Prior ZIP versions remain separate. Existing merchant content from the uploaded export is not migrated automatically.
+
+The 2.0.1 compatibility patch guards missing/invalid font settings and restores brand defaults without requiring initialized global settings. See SETTINGS-FIX.md for the exact problem and a layout-only upgrade that preserves merchant customization.

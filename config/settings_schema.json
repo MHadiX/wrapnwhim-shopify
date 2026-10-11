@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "WrapnWhim",
-    "theme_version": "2.0.0",
+    "theme_version": "2.0.1",
     "theme_author": "WrapnWhim",
     "theme_documentation_url": "https://github.com/MHadiX/wrapnwhim-shopify",
     "theme_support_url": "https://github.com/MHadiX/wrapnwhim-shopify/issues"
@@ -24,6 +24,13 @@
         "type": "image_picker",
         "id": "favicon",
         "label": "Favicon"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_shopify_fonts",
+        "label": "Use selected Shopify fonts",
+        "default": false,
+        "info": "Off uses Georgia headings and Arial text, matching the supplied design previews. Enable after choosing fonts below."
       },
       {
         "type": "font_picker",

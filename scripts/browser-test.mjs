@@ -161,12 +161,28 @@ try{
  });
  await check('Theme editor font, palette and product image settings override stylesheet defaults',async()=>{
   const preview='/qa-editor-settings';
-  const html=await renderTemplate('search',{search:{performed:true,terms:'gift',results:products,results_count:products.length,filters:[],sort_options:[],default_sort_by:'manual'},settings:{...base.settings,color_navy:'#123456',card_ratio:'1 / 1',card_image_fit:'contain',show_product_type:true,body_font:{family:'Verdana',fallback_families:'sans-serif',system:true}}});
+  const html=await renderTemplate('search',{search:{performed:true,terms:'gift',results:products,results_count:products.length,filters:[],sort_options:[],default_sort_by:'manual'},settings:{...base.settings,use_shopify_fonts:true,color_navy:'#123456',card_ratio:'1 / 1',card_image_fit:'contain',show_product_type:true,body_font:{family:'Verdana',fallback_families:'sans-serif',system:true}}});
   await page.route(fixture.url+preview,route=>route.fulfill({status:200,contentType:'text/html',body:html}));
   await go(preview);
   const styles=await page.evaluate(()=>{const media=document.querySelector('.product-card-media').getBoundingClientRect();return {ratio:media.width/media.height,fit:getComputedStyle(document.querySelector('.product-primary')).objectFit,font:getComputedStyle(document.body).fontFamily,navy:getComputedStyle(document.documentElement).getPropertyValue('--navy').trim()};});
   assert.ok(Math.abs(styles.ratio-1)<.01);assert.equal(styles.fit,'contain');assert.match(styles.font,/Verdana/);assert.equal(styles.navy,'#123456');assert.equal(await page.locator('.card-category').count(),5);
   await page.unroute(fixture.url+preview);
+ });
+ await check('Missing or invalid imported settings retain the photographed design and visible primary CTA',async()=>{
+  for(const [key,settings] of [['missing',{}],['empty',{color_navy:'',color_beige:'',color_ivory:'',color_text:'',heading_font:'',body_font:''}],['invalid-font',{use_shopify_fonts:true,heading_font:'not-a-font',body_font:'not-a-font'}]]){
+   const routeName=`/qa-import-${key}`;const html=await renderTemplate('index',{settings});
+   assert.doesNotMatch(html,/Liquid error|font_url can only/);assert.doesNotMatch(html,/rel="preload"[^>]*qa-selected-font/);
+   await page.route(fixture.url+routeName,route=>route.fulfill({status:200,contentType:'text/html',body:html}));
+   await go(routeName);
+   const actual=await page.evaluate(()=>{
+    const hero=document.querySelector('.hero'),cta=document.querySelector('.hero-buttons .button'),body=getComputedStyle(document.body);
+    const media=document.querySelector('.product-card-media').getBoundingClientRect();
+    return {hero:getComputedStyle(hero).backgroundColor,ctaBackground:getComputedStyle(cta).backgroundColor,ctaText:getComputedStyle(cta).color,bodyFont:body.fontFamily,headingFont:getComputedStyle(document.querySelector('h1')).fontFamily,ratio:media.width/media.height,overflow:document.documentElement.scrollWidth>innerWidth+1};
+   });
+   assert.equal(actual.hero,'rgb(241, 235, 225)');assert.equal(actual.ctaBackground,'rgb(16, 27, 45)');assert.equal(actual.ctaText,'rgb(255, 255, 255)');assert.match(actual.bodyFont,/Arial/);assert.match(actual.headingFont,/Georgia/);assert.ok(Math.abs(actual.ratio-.8)<.01);assert.equal(actual.overflow,false);
+   assert.equal(await page.locator('.hero-buttons .button').first().isVisible(),true);
+   await page.unroute(fixture.url+routeName);
+  }
  });
  await check('No browser JavaScript errors during tested flows',async()=>assert.deepEqual(errors,[]));
 }finally{

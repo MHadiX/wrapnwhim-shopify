@@ -4,7 +4,7 @@ A custom Online Store 2.0 theme for a premium Pakistan gifting storefront. Midni
 
 The repository contains the actual installable Liquid theme. The local browser renderer is a **QA fixture**, not a substitute storefront, backend or checkout.
 
-Version 2.0.0 rebuilds the storefront in a modern premium shopping style, with a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md).
+Version 2.0.1 fixes missing theme settings and invalid font inputs. The storefront uses a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md) and the [settings compatibility fix](docs/SETTINGS-FIX.md).
 
 ## Design preview
 
