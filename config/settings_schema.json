@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "WrapnWhim",
-    "theme_version": "1.1.0",
+    "theme_version": "2.0.0",
     "theme_author": "WrapnWhim",
     "theme_documentation_url": "https://github.com/MHadiX/wrapnwhim-shopify",
     "theme_support_url": "https://github.com/MHadiX/wrapnwhim-shopify/issues"
@@ -14,6 +14,11 @@
         "type": "image_picker",
         "id": "logo",
         "label": "Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "footer_logo",
+        "label": "Footer logo (optional)"
       },
       {
         "type": "image_picker",
@@ -71,7 +76,7 @@
         "type": "select",
         "id": "card_ratio",
         "label": "Image proportions",
-        "default": "1 / 1",
+        "default": "4 / 5",
         "options": [
           {
             "value": "1 / 1",
@@ -91,7 +96,7 @@
         "type": "select",
         "id": "card_image_fit",
         "label": "Image fit",
-        "default": "contain",
+        "default": "cover",
         "options": [
           {
             "value": "contain",
@@ -102,6 +107,12 @@
             "label": "Fill image area"
           }
         ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_type",
+        "label": "Show product type on cards",
+        "default": false
       }
     ]
   },

@@ -1,6 +1,6 @@
 {% liquid
   assign destination = block.settings.link | default: block.settings.collection.url | default: routes.collections_url
-  assign card_image = block.settings.image | default: block.settings.collection.featured_image
+  assign card_image = block.settings.image | default: block.settings.collection.image | default: block.settings.collection.featured_image
   assign card_title = block.settings.title | default: block.settings.collection.title
 %}
 <a class="collection-card" href="{{ destination }}" {{ block.shopify_attributes }}>

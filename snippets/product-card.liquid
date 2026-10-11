@@ -16,10 +16,9 @@
     </a>
     {% unless product.available %}<span class="badge">Sold out</span>{% elsif product.compare_at_price > product.price %}<span class="badge">Sale</span>{% endunless %}
     <button type="button" class="icon-button wishlist-button" data-wishlist="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }}">{% render 'icon', name: 'heart' %}</button>
-    <button type="button" class="icon-button card-quick-view" data-quick-view="{{ product.url }}" aria-label="Quick view of {{ product.title | escape }}">{% render 'icon', name: 'search' %}</button>
   </div>
   <div class="product-card-info">
-    {% if product.type != blank %}<p class="card-category">{{ product.type | escape }}</p>{% endif %}
+    {% if settings.show_product_type and product.type != blank %}<p class="card-category">{{ product.type | escape }}</p>{% endif %}
     <h3><a href="{{ product.url }}" title="{{ product.title | escape }}">{{ product.title | escape }}</a></h3>
     {% render 'price', product: product %}
     {% if product.metafields.reviews.rating.value %}
@@ -28,14 +27,15 @@
   </div>
   <div class="card-actions">
     {% if personalized %}
-      <a class="button button-outline" href="{{ product.url }}">Personalize your gift {% render 'icon', name: 'arrow' %}</a>
+      <a class="button card-purchase" href="{{ product.url }}">Personalize {% render 'icon', name: 'arrow' %}</a>
     {% elsif product.available == false %}
-      <button class="button button-outline" type="button" disabled>Sold out</button>
+      <button class="button card-purchase" type="button" disabled>Sold out</button>
     {% elsif product.has_only_default_variant and product.requires_selling_plan != true %}
-      <button class="button button-outline" type="button" data-quick-add="{{ product.selected_or_first_available_variant.id }}" data-quantity="{{ product.selected_or_first_available_variant.quantity_rule.min | default: 1 }}">Add {% if product.selected_or_first_available_variant.quantity_rule.min > 1 %}{{ product.selected_or_first_available_variant.quantity_rule.min }} {% endif %}to gift bag {% render 'icon', name: 'bag' %}</button>
+      <button class="button card-purchase" type="button" data-quick-add="{{ product.selected_or_first_available_variant.id }}" data-quantity="{{ product.selected_or_first_available_variant.quantity_rule.min | default: 1 }}">Add {% if product.selected_or_first_available_variant.quantity_rule.min > 1 %}{{ product.selected_or_first_available_variant.quantity_rule.min }} {% endif %}to bag {% render 'icon', name: 'bag' %}</button>
     {% else %}
-      <button class="button button-outline" type="button" data-quick-view="{{ product.url }}">Choose options {% render 'icon', name: 'arrow' %}</button>
+      <button class="button card-purchase" type="button" data-quick-view="{{ product.url }}">Choose options {% render 'icon', name: 'arrow' %}</button>
     {% endif %}
+    <button type="button" class="icon-button card-quick-view" data-quick-view="{{ product.url }}" aria-label="Quick view of {{ product.title | escape }}">{% render 'icon', name: 'eye' %}</button>
     <p class="form-error" data-card-error role="alert"></p>
     <noscript><a class="text-link" href="{{ product.url }}">View gift details →</a></noscript>
   </div>

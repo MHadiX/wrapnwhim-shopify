@@ -7,13 +7,14 @@
         "0": {
           "type": "slide",
           "settings": {
-            "heading": "The art of thoughtful gifting.",
-            "description": "For every person, every occasion, and every little reason to make someone smile.",
-            "eyebrow": "WRAPNWHIM \u00b7 MADE TO MEAN MORE",
-            "button": "Discover the collection",
-            "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
+            "heading": "Thoughtful gifts. Beautiful moments.",
+            "description": "For the people you love and the moments that matter. Discover gifts with a little more meaning.",
+            "eyebrow": "A LITTLE THOUGHT GOES A LONG WAY",
+            "button": "Shop gifts",
+            "note": "",
             "position": "left",
-            "mobile_position": "bottom"
+            "mobile_position": "bottom",
+            "secondary_label": "Explore collections"
           }
         },
         "1": {
@@ -25,7 +26,8 @@
             "button": "Discover the collection",
             "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
             "position": "left",
-            "mobile_position": "bottom"
+            "mobile_position": "bottom",
+            "secondary_label": "Explore collections"
           }
         },
         "2": {
@@ -37,7 +39,8 @@
             "button": "Discover the collection",
             "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
             "position": "left",
-            "mobile_position": "bottom"
+            "mobile_position": "bottom",
+            "secondary_label": "Explore collections"
           }
         },
         "3": {
@@ -49,7 +52,8 @@
             "button": "Discover the collection",
             "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
             "position": "left",
-            "mobile_position": "bottom"
+            "mobile_position": "bottom",
+            "secondary_label": "Explore collections"
           }
         },
         "4": {
@@ -61,7 +65,8 @@
             "button": "Discover the collection",
             "note": "CURATED WITH CARE \u00b7 WRAPPED WITH LOVE",
             "position": "left",
-            "mobile_position": "bottom"
+            "mobile_position": "bottom",
+            "secondary_label": "Explore collections"
           }
         }
       },
@@ -120,12 +125,12 @@
     "categories": {
       "type": "image-grid",
       "settings": {
-        "heading": "Find their kind of joy.",
-        "eyebrow": "A LITTLE SOMETHING FOR EVERYONE",
-        "columns": 6,
+        "heading": "Find the perfect gift",
+        "eyebrow": "SHOP BY CATEGORY",
+        "columns": 4,
         "link": "/collections",
         "collapse": true,
-        "initial_cards": 6,
+        "initial_cards": 8,
         "layout": "grid",
         "more_label": "View all gift categories"
       },
@@ -233,26 +238,29 @@
     "featured": {
       "type": "featured-products",
       "settings": {
-        "heading": "Small gestures. Beautiful gifts.",
+        "heading": "Gifts worth giving",
         "eyebrow": "THE WRAPNWHIM EDIT",
-        "fallback_all": true
+        "fallback_all": true,
+        "limit": 8
       }
     },
     "personal": {
       "type": "editorial-banner",
       "settings": {
         "demo_asset": "personal.webp",
-        "heading": "A gift with their name on it.",
-        "button": "Create your gift"
+        "heading": "Made personal. Made for them.",
+        "button": "Create your gift",
+        "eyebrow": "MORE THAN A GIFT",
+        "text": "<p>A name, a memory, a message only you could write. Turn a thoughtful gift into something they\u2019ll treasure.</p>"
       }
     },
     "occasions": {
       "type": "image-grid",
       "settings": {
-        "heading": "For every chapter of their story.",
-        "eyebrow": "CELEBRATE THE MOMENT",
+        "heading": "Every occasion deserves something special",
+        "eyebrow": "CELEBRATE YOUR PEOPLE",
         "columns": 6,
-        "round": false,
+        "round": true,
         "layout": "rail",
         "collapse": false
       },
@@ -359,10 +367,10 @@
     "builder": {
       "type": "editorial-banner",
       "settings": {
-        "heading": "Their favorites. Your finishing touch.",
+        "heading": "Their kind of perfect. Your kind of thoughtful.",
         "eyebrow": "BUILD A BOX OF HAPPINESS",
         "text": "<p>Choose a beautiful box, fill it with their favorite little luxuries, and finish with a note from the heart.</p>",
-        "button": "Build your gift box",
+        "button": "Create a gift box",
         "color": "navy",
         "demo_asset": "giftbox.webp"
       }
@@ -419,11 +427,11 @@
   "order": [
     "hero",
     "trust",
-    "categories",
     "featured",
+    "categories",
     "personal",
-    "bestsellers",
     "occasions",
+    "bestsellers",
     "builder",
     "reviews",
     "inspiration",

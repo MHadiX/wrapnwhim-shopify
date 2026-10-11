@@ -2,7 +2,7 @@
 
 ## Install on an unpublished theme
 
-Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-1.1.0.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
+Run `npm ci`, `npm run check`, `npm test`, and `npm run package`. Upload the resulting `WrapnWhim-2.0.0.zip` in Shopify Admin → Online Store → Themes → Add theme. Alternatively:
 
 ```sh
 npx shopify theme push --store your-store.myshopify.com --unpublished
@@ -21,11 +21,13 @@ Authenticate interactively with a Shopify account authorized for the store. Neve
 
 ## Card and layout controls
 
-Theme settings → Product cards controls image proportions (square, portrait or tall portrait) and image fit (show full product or fill the image). All product cards share these settings. Single default-variant gifts have direct Ajax add; gifts with options use the quick-view form; configured personalization sends customers to the full product page. Minimum purchase quantities are respected and shown on the quick-add button.
+Theme settings → Product cards controls image proportions (square, portrait or tall portrait) and image fit (show full product or fill the image). The initial image setting is portrait (4:5) with fill/crop; use square or show-full-product for photography that needs uncropped edges. All product cards share these settings. Product type labels can be toggled independently. Single default-variant gifts have direct Ajax add; gifts with options use the quick-view form; configured personalization sends customers to the full product page. Minimum purchase quantities are respected and shown on the quick-add button.
 
-Each Categories or occasions section offers a grid or scrollable row, desktop column count, optional circular images and optional expansion of additional cards. The homepage initially shows six category cards, retains all twelve behind the expansion control, and uses a scrollable row for eleven occasions. All collection destinations remain editable.
+Each Categories or occasions section offers a grid or scrollable row, desktop column count, optional circular images and optional expansion of additional cards. The homepage initially shows eight category cards in four desktop columns, retains the remaining four behind the expansion control, and uses a scrollable row of round images for eleven occasions. All collection destinations remain editable.
 
-Collection and search pages keep native filters in a desktop sidebar and use an expandable filter panel on mobile. Configure available filter types in Shopify; the layout does not create unsupported filters. Product prices appear before option selectors, and product galleries reserve image space to avoid layout shifts.
+Collection and search pages keep native filters in a desktop sidebar and use an expandable filter panel on mobile. Configure available filter types in Shopify; the layout does not create unsupported filters. Product prices appear before option selectors, and product galleries reserve image space to avoid layout shifts. The product section’s “Sticky mobile purchase bar” setting enables a mobile price/action bar while the main purchase button is out of view. It submits the same product form, validates required fields, updates with variant price/stock, and never skips personalization.
+
+The footer has an optional separate logo and an optional newsletter. The newsletter is off in the footer initially because the homepage includes its own signup. Configure real support links/policies and navigation menus; unconfigured footer shop links still point to native Shopify shopping/search routes.
 
 ## Products and collections
 

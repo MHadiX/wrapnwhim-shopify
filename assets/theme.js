@@ -183,6 +183,15 @@
         const target = this.querySelector(`[data-preview-${input.dataset.previewField}]`); if (target) target.textContent = input.value || (input.dataset.previewField === 'name' ? 'Your special someone' : 'A little note from the heart.');
       }));
       this.form.addEventListener('submit', event => this.submit(event));
+      this.mobileButton = this.querySelector('[data-mobile-add]');
+      this.mobileBar = this.querySelector('[data-mobile-purchase]');
+      this.mobileButton?.addEventListener('click', () => this.form.requestSubmit(this.add));
+      if (this.mobileBar) {
+        this.purchaseObserver = new IntersectionObserver(entries => {
+          this.mobileBar.hidden = entries[0].isIntersecting;
+        }, { rootMargin: '-90px 0px 0px' });
+        this.purchaseObserver.observe(this.add);
+      }
       this.applyVariant(this.variants.find(v => v.id === Number(this.select.value)), false);
     }
     updateVariant() {
@@ -191,7 +200,10 @@
     }
     applyVariant(variant, updateURL = true) {
       this.variant = variant;
-      this.add.disabled = !variant?.available; this.add.textContent = !variant ? 'Unavailable combination' : variant.available ? 'Add to gift bag' : 'Sold out';
+      this.add.disabled = this.busy || !variant?.available; this.add.textContent = this.busy ? 'Adding your gift…' : !variant ? 'Unavailable combination' : variant.available ? 'Add to gift bag' : 'Sold out';
+      if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; }
+      const mobilePrice = this.querySelector('[data-mobile-price]');
+      if (mobilePrice) mobilePrice.textContent = variant ? money(variant.price) : 'Unavailable';
       this.querySelector('[data-availability]').textContent = !variant ? 'This combination is unavailable.' : variant.available ? 'Available' : 'Sold out';
       if (!variant) { this.select.value = ''; this.querySelector('[data-product-price]').textContent = 'Choose another combination'; return; }
       this.select.value = variant.id;
@@ -218,7 +230,7 @@
       if (!this.variant?.available) { event.preventDefault(); error.textContent = 'Please choose an available gift option.'; return; }
       if (upload?.files.length) return; // Shopify's native multipart upload persists the file URL with the line item.
       event.preventDefault(); if (this.busy || !this.form.reportValidity()) return;
-      this.busy = true; this.add.disabled = true; this.add.textContent = 'Adding your gift…';
+      this.busy = true; this.add.disabled = true; this.add.textContent = 'Adding your gift…'; if (this.mobileButton) { this.mobileButton.disabled = true; this.mobileButton.textContent = 'Adding…'; }
       try {
         const data = new FormData(this.form);
         [...data.keys()].filter(key => this.form.elements[key]?.type === 'file').forEach(key => data.delete(key));
@@ -227,9 +239,9 @@
         try { await refreshCart(result.sections?.['cart-drawer']); openDialog('CartDrawer'); } catch { location.assign(`${root}cart`); }
         status('Your gift was added to the bag.');
       } catch (failure) { error.textContent = failure.message; }
-      finally { this.busy = false; this.add.disabled = !this.variant?.available; this.add.textContent = 'Add to gift bag'; }
+      finally { this.busy = false; this.add.disabled = !this.variant?.available; this.add.textContent = this.variant?.available ? 'Add to gift bag' : 'Sold out'; if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; } }
     }
-    disconnectedCallback() { if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
+    disconnectedCallback() { this.purchaseObserver?.disconnect(); if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
   }
   customElements.define('product-form', ProductForm);
 

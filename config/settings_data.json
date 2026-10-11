@@ -7,8 +7,9 @@
     "color_ivory": "#FAF8F3",
     "color_beige": "#F1EBE1",
     "color_text": "#252525",
-    "card_ratio": "1 / 1",
-    "card_image_fit": "contain"
+    "card_ratio": "4 / 5",
+    "card_image_fit": "cover",
+    "show_product_type": false
   },
   "presets": {}
 }

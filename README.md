@@ -4,7 +4,15 @@ A custom Online Store 2.0 theme for a premium Pakistan gifting storefront. Midni
 
 The repository contains the actual installable Liquid theme. The local browser renderer is a **QA fixture**, not a substitute storefront, backend or checkout.
 
-Version 1.1.0 refreshes the page layouts, category cards, product cards and responsive shopping controls. See [layout changes](docs/LAYOUT-REFRESH.md).
+Version 2.0.0 rebuilds the storefront in a modern premium shopping style, with a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md).
+
+## Design preview
+
+Screenshots use the rendered Liquid theme with a clearly separate **local test catalog**. The depicted product names, prices and availability are test fixtures, not WrapnWhim’s real inventory. No fixture catalog is included in the installable theme.
+
+[Desktop homepage](docs/previews/home-desktop.png) · [Product card layout](docs/previews/product-cards.png) · [Mobile homepage](docs/previews/home-mobile.png)
+
+![Modern premium homepage, shown with local test content](docs/previews/home-desktop.png)
 
 ## Develop and validate
 

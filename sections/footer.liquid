@@ -1,4 +1,4 @@
-<footer class="site-footer"><div class="page-width footer-grid"><div><a href="{{ routes.root_url }}" class="wordmark">Wrap<span>n</span>Whim</a><p>{{ section.settings.description | escape }}</p>{% if section.settings.email != blank %}<a href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a>{% endif %}{% if section.settings.phone != blank %}<p>{{ section.settings.phone | escape }}</p>{% endif %}<div class="social-links">{% for block in section.blocks %}<a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>{% endfor %}</div></div>{% for i in (1..2) %}{% capture menu_id %}menu_{{ i }}{% endcapture %}<div><h2>{{ section.settings[menu_id].title | default: 'Explore' | escape }}</h2>{% for link in section.settings[menu_id].links %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% endfor %}{% if i == 2 %}{% for policy in shop.policies %}{% if policy.body != blank %}<a href="{{ policy.url }}">{{ policy.title | escape }}</a>{% endif %}{% endfor %}{% endif %}</div>{% endfor %}<div><h2>A little joy in your inbox</h2><p>Gift inspiration, new arrivals, and thoughtful little extras.</p>{% render 'newsletter-form', id: section.id %}</div></div><div class="page-width footer-bottom"><p>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }} · {{ section.settings.location | escape }}</p><div class="payment-icons">{% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'payment-icon' }}{% endfor %}</div></div></footer>
+<footer class="site-footer"><div class="page-width footer-grid {% unless section.settings.show_newsletter %}footer-three{% endunless %}"><div><a href="{{ routes.root_url }}" class="wordmark" aria-label="{{ shop.name | escape }} home">{% if settings.footer_logo %}{{ settings.footer_logo | image_url: width: 360 | image_tag: widths: '180,360', alt: shop.name, loading: 'lazy' }}{% else %}Wrap<span>n</span>Whim{% endif %}</a><p>{{ section.settings.description | escape }}</p>{% if section.settings.email != blank %}<a href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a>{% endif %}{% if section.settings.phone != blank %}<p>{{ section.settings.phone | escape }}</p>{% endif %}<div class="social-links">{% for block in section.blocks %}<a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>{% endfor %}</div></div>{% for i in (1..2) %}{% capture menu_id %}menu_{{ i }}{% endcapture %}<div><h2>{% if section.settings[menu_id].title != blank %}{{ section.settings[menu_id].title | escape }}{% elsif i == 1 %}Shop{% else %}Customer care{% endif %}</h2>{% for link in section.settings[menu_id].links %}<a href="{{ link.url }}">{{ link.title | escape }}</a>{% else %}{% if i == 1 %}<a href="{{ routes.all_products_collection_url }}">Shop gifts</a><a href="{{ routes.collections_url }}">Explore collections</a><a href="{{ routes.search_url }}">Find a gift</a>{% else %}{% if shop.customer_accounts_enabled %}<a href="{{ routes.account_url }}">Your account &amp; orders</a>{% endif %}<p>{{ settings.delivery_message | escape }}</p>{% endif %}{% endfor %}{% if i == 2 %}{% for policy in shop.policies %}{% if policy.body != blank %}<a href="{{ policy.url }}">{{ policy.title | escape }}</a>{% endif %}{% endfor %}{% endif %}</div>{% endfor %}{% if section.settings.show_newsletter %}<div><h2>{{ section.settings.newsletter_heading | escape }}</h2><p>{{ section.settings.newsletter_text | escape }}</p>{% render 'newsletter-form', id: section.id %}</div>{% endif %}</div><div class="page-width footer-bottom"><p>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }} · {{ section.settings.location | escape }}</p><div class="payment-icons">{% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'payment-icon' }}{% endfor %}</div></div></footer>
 {% schema %}
 {
   "name": "Footer",
@@ -34,6 +34,24 @@
       "id": "location",
       "label": "Location",
       "default": "Pakistan"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show footer newsletter",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "A little joy in your inbox"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter description",
+      "default": "Gift inspiration, new arrivals, and thoughtful little extras."
     }
   ],
   "blocks": [

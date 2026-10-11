@@ -104,11 +104,11 @@ try{
   await go('/');
   // The fixture renderer omits Shopify section wrappers, so locate by its unique details.
   const more=page.locator('.catalog-more').first();assert.equal(await more.locator('.collection-card').first().isVisible(),false);
-  await more.locator('summary').click();assert.equal(await more.locator('.collection-card').count(),6);assert.equal(await more.locator('.collection-card').first().isVisible(),true);
+  await more.locator('summary').click();assert.equal(await more.locator('.collection-card').count(),4);assert.equal(await more.locator('.collection-card').first().isVisible(),true);
   const rail=page.locator('.collection-rail');assert.equal(await rail.locator('.collection-card').count(),11);
   await rail.locator('..').locator('[data-next]').click();await page.waitForFunction(()=>document.querySelector('.collection-rail').scrollLeft>0);
  });
- await check('Collection cards have square media and visible, aligned purchase actions',async()=>{
+ await check('Collection cards keep portrait media and visible, aligned purchase actions',async()=>{
   await go('/collections/all');
   for(const width of [320,390,768,1440]){
    await page.setViewportSize({width,height:900});
@@ -116,16 +116,16 @@ try{
     const image=node.querySelector('.product-card-media').getBoundingClientRect(),info=node.querySelector('.product-card-info').getBoundingClientRect(),action=node.querySelector('.card-actions').getBoundingClientRect();
     return {ratio:image.width/image.height,infoBottom:info.bottom,actionTop:action.top,actionHeight:action.height};
    }));
-   assert.ok(cards.every(card=>Math.abs(card.ratio-1)<.01&&card.actionTop>=card.infoBottom-1&&card.actionHeight>=44));
+   assert.ok(cards.every(card=>Math.abs(card.ratio-.8)<.01&&card.actionTop>=card.infoBottom-1&&card.actionHeight>=44));
    assert.ok(Math.abs(cards[0].actionTop-cards[1].actionTop)<1,'same-row buttons align');
   }
  });
  await check('Filter panels adapt to mobile and desktop without shifting the desktop grid',async()=>{
   await go('/collections/all');assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),true);
   const before=await page.locator('.product-grid').boundingBox();await page.locator('.filter-group summary').first().click();const after=await page.locator('.product-grid').boundingBox();assert.equal(before.x,after.x);assert.equal(before.width,after.width);
-  await page.setViewportSize({width:390,height:844});assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),false);
+  await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>!document.querySelector('[data-catalog-filters]').open);assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),false);
   await page.locator('.filter-toggle').click();assert.equal(await page.locator('select[name=sort_by]').isVisible(),true);
-  await page.setViewportSize({width:1440,height:900});assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),true);
+  await page.setViewportSize({width:1440,height:900});await page.waitForFunction(()=>document.querySelector('[data-catalog-filters]').open);assert.equal(await page.locator('[data-catalog-filters]').evaluate(n=>n.open),true);
  });
  await check('Card quick add submits real variant minimum quantity and shows server errors',async()=>{
   fixture.reset();await go('/collections/all');await page.locator('[data-quick-add]').click();await page.waitForFunction(()=>document.querySelector('#CartDrawer').open);
@@ -137,13 +137,35 @@ try{
   await go('/search');assert.equal(await page.locator('.product-grid .product-card').count(),5);assert.equal(await page.locator('.product-card h3 a').first().getAttribute('href'),'/products/gift-1');
  });
  await page.setViewportSize({width:1440,height:1000});await go('/');await page.screenshot({path:'test-results/home-desktop.png',fullPage:true});await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-mobile.png',fullPage:true});
+ await check('Mobile purchase bar validates personalization and follows variant price and stock',async()=>{
+  fixture.reset();await page.setViewportSize({width:390,height:844});await go('/products/gift-2');
+  const bar=page.locator('[data-mobile-purchase]');await page.waitForFunction(()=>!document.querySelector('[data-mobile-purchase]').hidden);
+  assert.equal(await bar.isVisible(),true);assert.match(await bar.locator('[data-mobile-price]').textContent(),/1,800/);
+  await bar.locator('[data-mobile-add]').click();assert.equal(fixture.cart().items.length,0);assert.equal(await page.locator('[data-preview-field="name"]').evaluate(n=>n.matches(':invalid')),true);
+  await page.locator('.variant-options').first().locator('input[value=Ivory]').check();assert.equal(await bar.locator('[data-mobile-add]').isDisabled(),true);
+  await page.locator('.variant-options').nth(1).locator('input[value=Premium]').check();assert.match(await bar.locator('[data-mobile-price]').textContent(),/2,200/);
+  await page.locator('[data-preview-field="name"]').fill('Amina');await page.locator('[data-preview-field="message"]').fill('With love');
+  await page.evaluate(()=>scrollTo(0,0));await page.waitForFunction(()=>!document.querySelector('[data-mobile-purchase]').hidden);await bar.locator('[data-mobile-add]').click();await page.waitForFunction(()=>document.querySelector('#CartDrawer').open);
+  assert.equal(fixture.cart().items[0].variant.id,21);assert.equal(fixture.cart().items[0].properties['Gift message'],'With love');await page.keyboard.press('Escape');
+  await page.setViewportSize({width:1440,height:1000});assert.equal(await bar.isVisible(),false);
+ });
+ await check('Compact header and clean cards keep usable controls on phones and tablets',async()=>{
+  await go('/');for(const width of [320,390,768,1024,1440]){
+   await page.setViewportSize({width,height:900});
+   assert.ok((await page.locator('.site-header').boundingBox()).height<=84);
+   assert.equal(await page.locator('[data-open="MenuDrawer"]').isVisible(),width<1120);
+   const card=page.locator('.product-carousel .product-card').first();assert.equal(await card.locator('.wishlist-button').isVisible(),true);
+   const actions=await card.locator('.card-actions .button,.card-quick-view').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect()));assert.ok(actions.every(a=>a.height>=44));
+   assert.equal(await card.locator('.card-category').count(),0);
+  }
+ });
  await check('Theme editor font, palette and product image settings override stylesheet defaults',async()=>{
   const preview='/qa-editor-settings';
-  const html=await renderTemplate('search',{search:{performed:true,terms:'gift',results:products,results_count:products.length,filters:[],sort_options:[],default_sort_by:'manual'},settings:{...base.settings,color_navy:'#123456',card_ratio:'4 / 5',card_image_fit:'cover',body_font:{family:'Verdana',fallback_families:'sans-serif',system:true}}});
+  const html=await renderTemplate('search',{search:{performed:true,terms:'gift',results:products,results_count:products.length,filters:[],sort_options:[],default_sort_by:'manual'},settings:{...base.settings,color_navy:'#123456',card_ratio:'1 / 1',card_image_fit:'contain',show_product_type:true,body_font:{family:'Verdana',fallback_families:'sans-serif',system:true}}});
   await page.route(fixture.url+preview,route=>route.fulfill({status:200,contentType:'text/html',body:html}));
   await go(preview);
   const styles=await page.evaluate(()=>{const media=document.querySelector('.product-card-media').getBoundingClientRect();return {ratio:media.width/media.height,fit:getComputedStyle(document.querySelector('.product-primary')).objectFit,font:getComputedStyle(document.body).fontFamily,navy:getComputedStyle(document.documentElement).getPropertyValue('--navy').trim()};});
-  assert.ok(Math.abs(styles.ratio-.8)<.01);assert.equal(styles.fit,'cover');assert.match(styles.font,/Verdana/);assert.equal(styles.navy,'#123456');
+  assert.ok(Math.abs(styles.ratio-1)<.01);assert.equal(styles.fit,'contain');assert.match(styles.font,/Verdana/);assert.equal(styles.navy,'#123456');assert.equal(await page.locator('.card-category').count(),5);
   await page.unroute(fixture.url+preview);
  });
  await check('No browser JavaScript errors during tested flows',async()=>assert.deepEqual(errors,[]));
