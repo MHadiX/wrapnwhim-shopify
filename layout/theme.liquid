@@ -34,6 +34,7 @@
   {% endstyle %}
   {{ content_for_header }}
   <script src="{{ 'core.js' | asset_url }}" defer></script>
+  <script src="{{ 'gift-extras.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
 </head>
 <body>
@@ -45,5 +46,5 @@
   {% render 'drawers' %}
   {% if settings.whatsapp_number != blank %}<a class="whatsapp" href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' | escape }}" target="_blank" rel="noopener" aria-label="Contact WrapnWhim on WhatsApp">{% render 'icon', name: 'message' %}<span>How can we help?</span></a>{% endif %}
   <div class="sr-only" role="status" aria-live="polite" id="StoreStatus"></div>
-  <script id="StoreConfig" type="application/json">{"root": {{ routes.root_url | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }}}</script>
+  <script id="StoreConfig" type="application/json">{"root": {{ routes.root_url | json }}, "moneyFormat": {{ shop.money_with_currency_format | strip_html | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }}}</script>
 </body></html>

@@ -9,6 +9,16 @@
     if (!Number.isFinite(cents)) throw new Error('Price is unavailable.');
     return new Intl.NumberFormat(locale, { style: 'currency', currency, currencyDisplay: 'code', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(cents / 100);
   }
+  function shopMoney(cents, format, currency = 'PKR') {
+    if (!Number.isSafeInteger(cents)) throw new Error('Price is unavailable.');
+    if (!format || !/\{\{\s*amount/.test(format)) return money(cents, currency);
+    const tokens = {amount:[2,',','.'],amount_no_decimals:[0,',','.'],amount_with_comma_separator:[2,'.',','],amount_no_decimals_with_comma_separator:[0,'.',','],amount_with_apostrophe_separator:[2,"'",'.'],amount_with_space_separator:[2,' ', ','],amount_no_decimals_with_space_separator:[0,' ', ','],amount_with_period_and_space_separator:[2,' ','.']};
+    return format.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, token) => {
+      const spec = tokens[token]; if (!spec) return money(cents,currency);
+      const parts = (cents/100).toFixed(spec[0]).split('.');
+      return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,spec[1]) + (parts[1] ? spec[2]+parts[1] : '');
+    });
+  }
   function validateUpload(file, maxMB) {
     if (!file) return '';
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return 'Please choose a JPG, PNG, or WebP image.';
@@ -61,5 +71,5 @@
       ...(role === 'Box' && draft.occasion ? { 'Occasion': String(draft.occasion).slice(0, 60) } : {})
     } }));
   }
-  root.WrapCommerce = { resolveVariant, money, validateUpload, findVariant, builderSelection, validateBuilder, builderTotal, builderLines };
+  root.WrapCommerce = { resolveVariant, money, shopMoney, validateUpload, findVariant, builderSelection, validateBuilder, builderTotal, builderLines };
 })(typeof window === 'undefined' ? globalThis : window);

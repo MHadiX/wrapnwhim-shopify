@@ -4,7 +4,7 @@ import path from 'node:path';
 import { pages, base, products, renderSection, renderTemplate } from './theme-fixture.mjs';
 export async function fixtureServer() {
  const htmlPages = await pages(); const events=[];
- let items=[],note='',rejectNextAdd=false;
+ let items=[],note='',rejectNextAdd=false,partialNextAdd=false,failCleanup=false,loseResponse=false;
  const cart=()=>({'empty?':items.length===0,empty:items.length===0,items,item_count:items.reduce((n,i)=>n+i.quantity,0),total_price:items.reduce((n,i)=>n+i.final_line_price,0),currency:{iso_code:'PKR'},note,cart_level_discount_applications:[]});
  const cartHtml=()=>renderSection('cart-drawer',{}, {...base,cart:cart()});
  const server=http.createServer(async (req,res)=>{
@@ -29,7 +29,9 @@ export async function fixtureServer() {
     if(rejectNextAdd){rejectNextAdd=false;return send({description:'This gift is no longer available.'},422);}
     const lines=body.items||[{id:Number(body.id),quantity:Number(body.quantity),properties:Object.fromEntries(Object.entries(body).filter(([key])=>key.startsWith('properties[')).map(([key,value])=>[key.slice(11,-1),value]))}];
     for(const line of lines){const product=products.find(p=>p.variants.some(v=>v.id===Number(line.id)));const variant=product?.variants.find(v=>v.id===Number(line.id));if(!variant?.available)return send({description:'Sold out'},422);}
-    for(const line of lines){const product=products.find(p=>p.variants.some(v=>v.id===Number(line.id)));const variant=product.variants.find(v=>v.id===Number(line.id));const key=`${variant.id}:${items.length}`;items.push({key,product,variant,title:product.title,url:product.url,image:product.featured_image,properties:line.properties||{},quantity:line.quantity,final_price:variant.price,original_line_price:variant.price*line.quantity,final_line_price:variant.price*line.quantity,line_level_discount_allocations:[],url_to_remove:`/cart/change?id=${key}&quantity=0`});}
+    for(const line of (partialNextAdd?lines.slice(0,1):lines)){const product=products.find(p=>p.variants.some(v=>v.id===Number(line.id)));const variant=product.variants.find(v=>v.id===Number(line.id));const key=`${variant.id}:${items.length}`;items.push({key,product,variant,title:product.title,url:product.url,image:product.featured_image,properties:line.properties||{},quantity:line.quantity,final_price:variant.price,original_line_price:variant.price*line.quantity,final_line_price:variant.price*line.quantity,line_level_discount_allocations:[],url_to_remove:`/cart/change?id=${key}&quantity=0`});}
+    if(partialNextAdd){partialNextAdd=false;return send({description:'Extra stock changed'},422);}
+    if(loseResponse){loseResponse=false;return send({description:'Response interrupted'},500);}
     return send({...cart(),sections:{'cart-drawer':await cartHtml()}});
    }
    if(pathname==='/cart/change.js'){
@@ -38,6 +40,7 @@ export async function fixtureServer() {
     return send({...cart(),sections:{'cart-drawer':await cartHtml()}});
    }
    if(pathname==='/cart/update.js'){
+    if(failCleanup){failCleanup=false;return send({description:'Cleanup unavailable'},500);}
     if(body.note!==undefined)note=body.note;
     for(const [key,qty]of Object.entries(body.updates||{})){const item=items.find(i=>i.key===key);if(item){item.quantity=qty;item.final_line_price=item.final_price*qty;item.original_line_price=item.final_line_price;}}
     items=items.filter(i=>i.quantity>0);return send(cart());
@@ -47,6 +50,9 @@ export async function fixtureServer() {
    }
    if(pathname==='/products/gift-1'&&url.searchParams.get('view')==='quick-view')return send(await renderSection('quick-product',{}, {...base,product:products[0]}),200,'text/html');
    if(pathname==='/search/suggest')return send(await renderSection('predictive-search',{}, {...base,predictive_search:{performed:true,terms:url.searchParams.get('q'),resources:{products,collections:[],queries:[]}}}),200,'text/html');
+   if(pathname==='/products/gift-3'){
+    const product=structuredClone(products[2]);product.metafields.custom.gift_extras_enabled={value:true};product.metafields.custom.gift_extras={value:[products[3],products[4]]};return send(await renderTemplate('product',{product,cart:cart()}),200,'text/html');
+   }
    if(pathname==='/products/gift-2'){
     const product=structuredClone(products[1]);product.metafields.custom.personalization_enabled={value:true};return send(await renderTemplate('product',{...base,product,cart:cart(),request:{...base.request,page_type:'product'}}),200,'text/html');
    }
@@ -58,5 +64,5 @@ export async function fixtureServer() {
   }catch(error){res.writeHead(500);res.end(error.stack);}
  });
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
- return {server,url:`http://127.0.0.1:${server.address().port}`,events,cart,reset(){items=[];note='';events.length=0;},rejectAdd(){rejectNextAdd=true;}};
+ return {server,url:`http://127.0.0.1:${server.address().port}`,events,cart,reset(){items=[];note='';events.length=0;},rejectAdd(){rejectNextAdd=true;},partialAdd(){partialNextAdd=true;},failCleanup(){failCleanup=true;},loseResponse(){loseResponse=true;},discount(){for(const item of items){item.final_price-=100;item.final_line_price=item.final_price*item.quantity;item.line_level_discount_allocations=[{discount_application:{title:"Fixture automatic discount"},amount:100*item.quantity}];}}};
 }

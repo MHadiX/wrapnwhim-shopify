@@ -5,7 +5,7 @@
   const C = window.WrapCommerce;
   const root = config.root.endsWith('/') ? config.root : `${config.root}/`;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const money = cents => C.money(cents, config.currency);
+  const money = cents => C.shopMoney(cents, config.moneyFormat, config.currency);
   const status = message => { const el = document.getElementById('StoreStatus'); if (el) el.textContent = message; };
   const el = (tag, attrs = {}, text = '') => {
     const node = document.createElement(tag);
@@ -192,7 +192,10 @@
         }, { rootMargin: '-90px 0px 0px' });
         this.purchaseObserver.observe(this.add);
       }
+      if (this.querySelector('[data-gift-extras]')) this.extras = new window.WrapGiftExtras(this, {money});
       this.applyVariant(this.variants.find(v => v.id === Number(this.select.value)), false);
+      this.onPageShow = () => { this.extras?.update(); this.querySelectorAll('[data-counter]').forEach(input => input.dispatchEvent(new Event('input'))); };
+      window.addEventListener('pageshow', this.onPageShow);
     }
     updateVariant() {
       const options = [...this.querySelectorAll('[data-option-index]')].map(group => group.querySelector('input:checked')?.value);
@@ -200,11 +203,12 @@
     }
     applyVariant(variant, updateURL = true) {
       this.variant = variant;
-      this.add.disabled = this.busy || !variant?.available; this.add.textContent = this.busy ? 'Adding your gift…' : !variant ? 'Unavailable combination' : variant.available ? 'Add to gift bag' : 'Sold out';
+      this.add.disabled = this.busy || !variant?.available; this.add.textContent = this.busy ? 'Adding your gift…' : !variant ? 'Unavailable combination' : variant.available ? (this.extras ? 'Add Customized Gift to Cart' : 'Add to gift bag') : 'Sold out';
       if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; }
       const mobilePrice = this.querySelector('[data-mobile-price]');
       if (mobilePrice) mobilePrice.textContent = variant ? money(variant.price) : 'Unavailable';
       this.querySelector('[data-availability]').textContent = !variant ? 'This combination is unavailable.' : variant.available ? 'Available' : 'Sold out';
+      this.extras?.update();
       if (!variant) { this.select.value = ''; this.querySelector('[data-product-price]').textContent = 'Choose another combination'; return; }
       this.select.value = variant.id;
       const price = this.querySelector('[data-product-price]'); price.replaceChildren(el('span', {}, money(variant.price)));
@@ -214,6 +218,7 @@
       if (variant.quantity_rule?.max) qty.max = variant.quantity_rule.max; else qty.removeAttribute('max');
       if (Number(qty.value) < Number(qty.min)) qty.value = qty.min;
       this.closest('.product-layout')?.querySelector('product-gallery')?.show(variant.featured_media?.id || variant.featured_image?.id);
+      this.extras?.update();
       if (updateURL && this.closest('.product-section')) { const url = new URL(location.href); url.searchParams.set('variant', variant.id); history.replaceState({}, '', url); }
     }
     checkUpload(input) {
@@ -230,8 +235,15 @@
       if (!this.variant?.available) { event.preventDefault(); error.textContent = 'Please choose an available gift option.'; return; }
       if (upload?.files.length) return; // Shopify's native multipart upload persists the file URL with the line item.
       event.preventDefault(); if (this.busy || !this.form.reportValidity()) return;
-      this.busy = true; this.add.disabled = true; this.add.textContent = 'Adding your gift…'; if (this.mobileButton) { this.mobileButton.disabled = true; this.mobileButton.textContent = 'Adding…'; }
+      this.busy = true; this.form.inert = true; this.form.setAttribute('aria-busy','true'); this.add.disabled = true; this.add.textContent = 'Adding your gift…'; if (this.mobileButton) { this.mobileButton.disabled = true; this.mobileButton.textContent = 'Adding…'; }
       try {
+        if (this.extras) {
+          const bundle = await this.extras.prepare(root, request);
+          await addCustomizedGift(bundle);
+          try { await refreshCart(); openDialog('CartDrawer'); } catch { location.assign(`${root}cart`); }
+          status('Your customized gift was added to the bag.');
+          return;
+        }
         const data = new FormData(this.form);
         [...data.keys()].filter(key => this.form.elements[key]?.type === 'file').forEach(key => data.delete(key));
         data.set('sections', 'cart-drawer'); data.set('sections_url', location.pathname);
@@ -239,11 +251,31 @@
         try { await refreshCart(result.sections?.['cart-drawer']); openDialog('CartDrawer'); } catch { location.assign(`${root}cart`); }
         status('Your gift was added to the bag.');
       } catch (failure) { error.textContent = failure.message; }
-      finally { this.busy = false; this.add.disabled = !this.variant?.available; this.add.textContent = this.variant?.available ? 'Add to gift bag' : 'Sold out'; if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; } }
+      finally { this.busy = false; this.form.inert = false; this.form.removeAttribute('aria-busy'); this.add.disabled = !this.variant?.available; this.add.textContent = this.variant?.available ? (this.extras ? 'Add Customized Gift to Cart' : 'Add to gift bag') : 'Sold out'; if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; } }
     }
-    disconnectedCallback() { this.purchaseObserver?.disconnect(); if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
+    disconnectedCallback() { window.removeEventListener('pageshow', this.onPageShow); this.purchaseObserver?.disconnect(); if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
   }
   customElements.define('product-form', ProductForm);
+
+  async function addCustomizedGift(bundle) {
+    let failure;
+    try { await jsonPost(`${root}cart/add.js`, {items: bundle.items, sections: ['cart-drawer'], sections_url: location.pathname}); }
+    catch (error) { failure = error; }
+    let cart;
+    try { cart = await request(`${root}cart.js`); }
+    catch { throw new Error('We could not confirm your gift. Open your bag before trying again to avoid duplicates.'); }
+    const lines = cart.items.filter(item => item.properties?._wnw_group === bundle.group);
+    const complete = bundle.items.every(expected => lines.filter(line => String(line.variant_id || line.variant?.id || line.id) === String(expected.id) && line.properties?._wnw_role === expected.properties._wnw_role).reduce((sum,line) => sum+line.quantity,0) === expected.quantity) && lines.length === bundle.items.length;
+    if (complete) return;
+    if (lines.length) {
+      try {
+        await jsonPost(`${root}cart/update.js`, {updates: Object.fromEntries(lines.map(line => [line.key,0]))});
+        const verified = await request(`${root}cart.js`);
+        if (verified.items.some(line => line.properties?._wnw_group === bundle.group)) throw new Error('Incomplete removal');
+      } catch { await refreshCart().catch(() => {}); throw new Error('Only part of your gift may be in the bag. Open your bag and review or remove those items before trying again.'); }
+    }
+    throw new Error(`${failure?.message || 'Shopify could not add the complete gift.'} Your customized gift was not added; please review your options.`);
+  }
 
   let cartBusy = false;
   function showCartError(error) { document.querySelectorAll('[data-cart-error]').forEach(target => target.textContent = error.message); status(error.message); }
@@ -272,8 +304,12 @@
     cartBusy = true; document.querySelectorAll('[data-cart-content]').forEach(node => { node.classList.add('loading'); node.setAttribute('aria-busy', 'true'); });
     const focusedLabel = document.activeElement?.getAttribute('data-cart-quantity');
     try {
-      const result = await jsonPost(`${root}cart/change.js`, { id: key, quantity, sections: ['cart-drawer'], sections_url: location.pathname });
-      await refreshCart(result.sections?.['cart-drawer']); status('Your gift bag has been updated.');
+      const cart = quantity === 0 ? await request(`${root}cart.js`) : null;
+      const parent = cart?.items.find(line => line.key === key && line.properties?._wnw_role === 'parent');
+      const result = parent ? await jsonPost(`${root}cart/update.js`, {updates:Object.fromEntries(cart.items.filter(line => line.properties?._wnw_group === parent.properties._wnw_group).map(line => [line.key,0])),sections:['cart-drawer'],sections_url:location.pathname}) : await jsonPost(`${root}cart/change.js`, { id: key, quantity, sections: ['cart-drawer'], sections_url: location.pathname });
+      const updated = await refreshCart(result.sections?.['cart-drawer']);
+      if (parent && updated.items.some(line => line.properties?._wnw_group === parent.properties._wnw_group)) throw new Error('Some gift items remain in the bag. Please review and remove them before checkout.');
+      status('Your gift bag has been updated.');
       if (focusedLabel) [...document.querySelectorAll('[data-cart-quantity]')].find(input => input.dataset.cartQuantity === focusedLabel)?.focus();
     } catch (error) { showCartError(error); }
     finally { cartBusy = false; document.querySelectorAll('[data-cart-content]').forEach(node => { node.classList.remove('loading'); node.removeAttribute('aria-busy'); }); }
@@ -288,6 +324,10 @@
     try {
       const updates = {};
       form.querySelectorAll('[data-cart-quantity]').forEach(input => { if (!input.checkValidity()) throw new Error('Please check your gift quantities.'); updates[input.dataset.cartQuantity] = Number(input.value); });
+      const current = await request(`${root}cart.js`);
+      for (const parent of current.items.filter(line => line.properties?._wnw_role === 'parent' && updates[line.key] === 0)) {
+        current.items.filter(line => line.properties?._wnw_group === parent.properties._wnw_group).forEach(line => updates[line.key] = 0);
+      }
       await jsonPost(`${root}cart/update.js`, { updates, note: form.querySelector('[name="note"]').value });
       const handoff = document.createElement('form'); handoff.method = 'post'; handoff.action = `${root}cart`;
       const checkout = el('input', { type: 'hidden', name: 'checkout', value: 'Checkout' }); handoff.append(checkout); document.body.append(handoff); handoff.submit();

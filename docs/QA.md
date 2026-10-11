@@ -55,3 +55,9 @@ Use an unpublished theme with actual products and test payment mode. Retain thes
 ## Known scope limits
 
 No Shopify store domain/authentication was provided, so no development-store installation, payment, file-retention, actual order, email-delivery or live publication test was performed. No paid apps or external backends were provisioned. Guest wishlists are local to the browser. Gift boxes are separate Shopify products grouped for merchant assembly; an enforced native bundle requires the integration described in `INTEGRATIONS.md`.
+
+## Product extras release 2.1.0
+
+Completed locally: Theme Check inspected 96 Liquid files with zero offenses; 8 commerce unit tests; 25 existing Chromium browser regression checks; 12 additional extras browser checks. Eight existing axe WCAG 2/2.1 AA page/dialog audits and the extra-enabled product audit reported zero violations. Extras were checked for overflow at 320, 390, 768 and 1440 px; screenshots were visually reviewed. Browser/API assertions use the development-only controlled Shopify fixture, including stock changes, partial additions, interrupted responses, failed cleanup, separate groups, discounts, browser back and slow requests. These are not actual Shopify integration/order tests.
+
+Authenticated development/unpublished Shopify theme testing, real inventory conflicts, checkout and final order property verification remain unrun. Merchant setup and the exact remaining checks are in [PRODUCT-EXTRAS.md](PRODUCT-EXTRAS.md). iOS Safari and physical Android devices were not available; mobile Chromium checks do not establish device-specific coverage.

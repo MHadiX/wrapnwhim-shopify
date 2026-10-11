@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "WrapnWhim",
-    "theme_version": "2.0.1",
+    "theme_version": "2.1.0",
     "theme_author": "WrapnWhim",
     "theme_documentation_url": "https://github.com/MHadiX/wrapnwhim-shopify",
     "theme_support_url": "https://github.com/MHadiX/wrapnwhim-shopify/issues"
@@ -147,6 +147,26 @@
         "type": "page",
         "id": "wishlist_page",
         "label": "Wishlist page"
+      }
+    ]
+  },
+  {
+    "name": "Gift extras",
+    "settings": [
+      {
+        "type": "product_list",
+        "id": "default_gift_extras",
+        "label": "Default extra products",
+        "limit": 12
+      },
+      {
+        "type": "range",
+        "id": "gift_extra_max",
+        "label": "Default maximum quantity per extra",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "default": 5
       }
     ]
   }

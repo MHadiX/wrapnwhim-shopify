@@ -589,3 +589,30 @@ details[open]>summary:after { content: '−'; }
  *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
  html { scroll-behavior:auto; }
 }
+
+/* Catalog-backed gift extras */
+.gift-extras { border-top:1px solid #ded8ce; padding-top:24px; margin:24px 0; }
+.gift-extras h3 { font-size:24px; margin:0 0 8px; }
+.extra-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:20px 0; }
+.extra-card { display:grid; grid-template-columns:64px minmax(0,1fr); gap:12px; padding:12px; border:1px solid #ded8ce; border-radius:8px; transition:border-color .2s,background-color .2s; }
+.extra-card.is-selected { border-color:#101b2d; background:#faf8f3; }
+.extra-image { width:64px; height:80px; object-fit:cover; border-radius:4px; }
+.extra-choice { display:flex; gap:8px; align-items:flex-start; font-weight:600; font-size:14px; cursor:pointer; }
+.extra-choice input { width:20px; height:20px; flex-shrink:0; accent-color:#101b2d; }
+.extra-card p { margin:8px 0; font-size:14px; }
+.extra-card select { width:100%; min-height:44px; font-size:13px; padding:6px; }
+.extra-quantity { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; }
+.extra-quantity input { width:64px; min-height:44px; padding:6px; }
+.extra-card small { display:block; margin-top:6px; }
+.extra-touch { margin-top:24px; }
+.extra-names { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.extra-summary { padding:18px; border-radius:8px; background:#f1ebe1; margin:20px 0 12px; }
+.extra-summary div { display:flex; justify-content:space-between; gap:12px; margin:8px 0; }
+.extra-summary dd { margin:0; text-align:right; }
+.extra-total { border-top:1px solid #d8be91; padding-top:12px; font-weight:700; }
+.cart-gift-group { padding:12px; border:1px solid #ded8ce; border-radius:8px; margin-bottom:16px; }
+.cart-gift-group .cart-line { border:0; }
+.cart-gift-extras { margin-left:20px; border-left:2px solid #d8be91; padding-left:12px; }
+.cart-gift-extras h4 { margin:0 0 8px; }
+.cart-bundle-total { display:flex; justify-content:space-between; gap:12px; font-weight:600; }
+@media(max-width:600px) { .extra-grid,.extra-names { grid-template-columns:1fr; } .extra-card { grid-template-columns:72px minmax(0,1fr); } .extra-image { width:72px; height:90px; } .cart-gift-extras { margin-left:0; } }

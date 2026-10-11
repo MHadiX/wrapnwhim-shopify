@@ -53,3 +53,9 @@ test('PKR formatting handles cents without a pretend currency conversion',()=>{
  assert.match(C.money(125050,'PKR'),/1,250.5/);
  assert.throws(()=>C.money(NaN),/unavailable/);
 });
+test('Shopify merchant money formats preserve PKR, decimal separators, and safe integers',()=>{
+ assert.equal(C.shopMoney(349950,'Rs. {{ amount }} PKR'),'Rs. 3,499.50 PKR');
+ assert.equal(C.shopMoney(349950,'Rs {{amount_no_decimals}}'),'Rs 3,500');
+ assert.equal(C.shopMoney(349950,'{{ amount_with_comma_separator }} PKR'),'3.499,50 PKR');
+ assert.throws(()=>C.shopMoney(12.5,'{{amount}}'));
+});

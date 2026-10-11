@@ -4,7 +4,7 @@ A custom Online Store 2.0 theme for a premium Pakistan gifting storefront. Midni
 
 The repository contains the actual installable Liquid theme. The local browser renderer is a **QA fixture**, not a substitute storefront, backend or checkout.
 
-Version 2.0.1 fixes missing theme settings and invalid font inputs. The storefront uses a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md) and the [settings compatibility fix](docs/SETTINGS-FIX.md).
+Version 2.1.0 adds catalog-backed product extras, free gift messages, live price totals, and grouped cart lines. See [configuration and integrity limits](docs/PRODUCT-EXTRAS.md). Version 2.0.1 fixes missing theme settings and invalid font inputs. The storefront uses a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md) and the [settings compatibility fix](docs/SETTINGS-FIX.md).
 
 ## Design preview
 
@@ -22,6 +22,7 @@ Requires Node.js 22.12+ (Node 24 recommended). No runtime npm dependencies are s
 npm ci --cache /tmp/wrapnwhim-npm
 npm run check
 npm test
+npm run test:extras
 npm run test:a11y
 CHROMIUM_PATH=/usr/bin/chromium npm run test:browser
 npm run package

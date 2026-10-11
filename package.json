@@ -1,6 +1,6 @@
 {
   "name": "wrapnwhim-shopify",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "check": "shopify theme check --path .",
@@ -8,7 +8,8 @@
     "test:browser": "node scripts/browser-test.mjs",
     "dev": "shopify theme dev",
     "package": "shopify theme package",
-    "test:a11y": "node scripts/accessibility-test.mjs"
+    "test:a11y": "node scripts/accessibility-test.mjs",
+    "test:extras": "node scripts/extras-test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
