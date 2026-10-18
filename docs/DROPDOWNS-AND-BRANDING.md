@@ -34,3 +34,7 @@ Images keep their original aspect ratio, use Shopify image delivery, and remain 
 ## Verification
 
 Run `npm run check`, `npm test`, `npm run test:browser`, `npm run test:extras`, and `npm run test:a11y`. The tests use isolated fixture products and mock Shopify APIs, which are excluded from the installable ZIP. Before publishing, select real extras and verify prices, stock, grouping, free greeting properties, checkout, and a merchant-approved test order in an unpublished Shopify theme. Actual store checkout/order tests require authenticated store access and remain unrun here.
+
+## Font-default compatibility fix — 2.2.1
+
+Shopify rejected the previous `cormorant_garamond_n4` default when saving the global schema. Both font pickers now default to `assistant_n4`, the supported value used by Shopify Dawn. The default storefront still uses Georgia headings and Arial body text because Use selected Shopify fonts remains off. The prior Theme Check and local font fixtures did not validate Shopify’s remote font catalog; they did not establish that the old font handle could be saved in Admin. To repair an installed theme without replacing saved content, copy this release’s `config/settings_schema.json` into the same file in Shopify Edit code, save, and reopen the theme editor. Do not overwrite `settings_data.json`. Live Admin save verification remains pending merchant confirmation.
