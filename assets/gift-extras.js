@@ -5,10 +5,19 @@
   constructor(owner, commerce) {
    this.owner = owner; this.commerce = commerce; this.section = owner.querySelector('[data-gift-extras]');
    this.cards = [...this.section.querySelectorAll('[data-extra-card]')].map(node => ({node, variants: JSON.parse(node.querySelector('[data-extra-data]').textContent), max: Number(node.dataset.max), select: node.querySelector('[data-extra-select]'), variant: node.querySelector('[data-extra-variant]'), quantity: node.querySelector('[data-extra-quantity]')}));
+   this.picker = this.section.querySelector('[data-extra-picker]');
+   this.section.querySelector('[data-extra-picker-field]').hidden = false;
+   this.picker.addEventListener('change', () => {
+    const card = this.cards.find(card => card.variants.some(variant => String(variant.id) === this.picker.value));
+    if (!card) return;
+    card.variant.value = this.picker.value; card.select.checked = true; this.picker.value = ''; this.update();
+    card.node.querySelector('[data-extra-quantity]').focus();
+   });
+   this.cards.forEach(card => card.node.querySelector('[data-extra-remove]').addEventListener('click', () => { card.select.checked = false; this.update(); this.picker.focus(); }));
    this.section.querySelector('[data-extra-grid]').hidden = false;
    this.section.querySelector('[data-extra-summary]').hidden = false;
    owner.form.addEventListener('change', () => this.update());
-   owner.form.addEventListener('input', () => this.update());
+   owner.form.addEventListener('input', event => { if (event.target !== this.picker) this.update(); });
    this.update();
   }
   variant(card) { return card.variants.find(v => String(v.id) === card.variant.value); }
@@ -22,9 +31,25 @@
     card.quantity.disabled = !card.select.checked;
     if (Number(card.quantity.value) < Number(card.quantity.min)) card.quantity.value = card.quantity.min;
     card.node.classList.toggle('is-selected', card.select.checked);
+    card.node.hidden = !card.select.checked;
     card.node.querySelector('[data-extra-price]').textContent = variant ? this.commerce.money(variant.price) : 'Unavailable';
     card.node.querySelector('[data-extra-availability]').textContent = available ? `Up to ${card.quantity.max}` : variant?.available ? 'Quantity unavailable' : 'Sold Out';
    }
+   const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = 'Choose an extra to add';
+   this.picker.replaceChildren(placeholder);
+   for (const card of this.cards) {
+    const group = document.createElement('optgroup'); group.label = card.node.querySelector('.extra-choice span').textContent;
+    for (const variant of card.variants) {
+     const option = document.createElement('option'); option.value = String(variant.id);
+     const available = variant.available && (variant.quantity_rule?.min || 1) <= Math.min(card.max,variant.quantity_rule?.max || card.max);
+     option.disabled = !available;
+     option.textContent = `${group.label}${variant.title === 'Default Title' ? '' : ' — '+variant.title} — ${this.commerce.money(variant.price)}${available ? '' : ' — Sold Out'}`;
+     group.append(option);
+    }
+    this.picker.append(group);
+   }
+   this.picker.disabled = !this.cards.some(card => card.variants.some(variant => variant.available && (variant.quantity_rule?.min || 1) <= Math.min(card.max,variant.quantity_rule?.max || card.max)));
+   this.section.querySelector('[data-extra-empty]').hidden = !this.picker.disabled;
    const base = (this.owner.variant?.price || 0) * (Number(this.owner.form.elements.quantity.value) || 0);
    const extras = this.cards.filter(c => c.select.checked).reduce((sum, c) => sum + (this.variant(c)?.price || 0) * (Number(c.quantity.value) || 0), 0);
    const mobilePrice = this.owner.querySelector('[data-mobile-price]');

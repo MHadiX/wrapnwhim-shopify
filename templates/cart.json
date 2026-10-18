@@ -1,18 +1,1 @@
-{
-  "sections": {
-    "main": {
-      "type": "main-cart"
-    },
-    "recommendations": {
-      "type": "featured-products",
-      "settings": {
-        "heading": "A little something extra.",
-        "eyebrow": "COMPLETE THE GESTURE"
-      }
-    }
-  },
-  "order": [
-    "main",
-    "recommendations"
-  ]
-}
+{"sections":{"main":{"type":"main-cart","settings":{}},"recommendations":{"type":"featured-products","settings":{"eyebrow":"COMPLETE THE GESTURE","heading":"A little something extra."}}},"order":["main","recommendations"]}

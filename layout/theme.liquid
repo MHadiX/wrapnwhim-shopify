@@ -7,7 +7,7 @@
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
   <link rel="canonical" href="{{ canonical_url }}">
   {% render 'social-meta' %}
-  {% if settings.favicon %}<link rel="icon" href="{{ settings.favicon | image_url: width: 32 }}">{% endif %}
+  {% assign brand_favicon = settings.favicon | default: settings.brand_icon %}{% if brand_favicon %}<link rel="icon" href="{{ brand_favicon | image_url: width: 32 }}">{% endif %}
   {% if settings.use_shopify_fonts and settings.heading_font.family != blank %}
     {% unless settings.heading_font.system? %}{{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}{% endunless %}
   {% endif %}

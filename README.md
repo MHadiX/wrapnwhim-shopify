@@ -4,6 +4,8 @@ A custom Online Store 2.0 theme for a premium Pakistan gifting storefront. Midni
 
 The repository contains the actual installable Liquid theme. The local browser renderer is a **QA fixture**, not a substitute storefront, backend or checkout.
 
+Version 2.2.0 uses your October 18 exported settings and adds greeting-occasion and additional-product dropdowns. See [dropdown and branding setup](docs/DROPDOWNS-AND-BRANDING.md). Exact logo installation is pending the original PNG/SVG files.
+
 Version 2.1.0 adds catalog-backed product extras, free gift messages, live price totals, and grouped cart lines. See [configuration and integrity limits](docs/PRODUCT-EXTRAS.md). Version 2.0.1 fixes missing theme settings and invalid font inputs. The storefront uses a compact header, photographic merchandising, clean portrait product cards and a validated mobile purchase bar. See [layout changes](docs/LAYOUT-REFRESH.md) and the [settings compatibility fix](docs/SETTINGS-FIX.md).
 
 ## Design preview

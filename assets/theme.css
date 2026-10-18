@@ -616,3 +616,18 @@ details[open]>summary:after { content: '−'; }
 .cart-gift-extras h4 { margin:0 0 8px; }
 .cart-bundle-total { display:flex; justify-content:space-between; gap:12px; font-weight:600; }
 @media(max-width:600px) { .extra-grid,.extra-names { grid-template-columns:1fr; } .extra-card { grid-template-columns:72px minmax(0,1fr); } .extra-image { width:72px; height:90px; } .cart-gift-extras { margin-left:0; } }
+
+/* Native dropdowns for greeting cards and optional catalog additions. */
+.greeting-card-fields { margin:24px 0; padding-top:24px; border-top:1px solid #ded8ce; }
+.greeting-card-fields label,.extra-picker > label { font-weight:600; }
+.greeting-card-fields select,.extra-picker select { border-radius:4px; background-color:#fff; min-height:48px; }
+.greeting-card-fields small,.extra-picker small { display:block; margin-top:8px; color:#686868; }
+.extra-remove { min-height:44px; padding:8px 0; text-decoration:underline; color:#101b2d; font-size:13px; }
+.extra-choice input[hidden],.extra-card[hidden] { display:none; }
+.extra-picker { margin:20px 0; }
+.extra-choice { cursor:default; }
+.brand-lockup { display:inline-flex; align-items:center; gap:8px; }
+.wordmark img.brand-icon { width:36px; height:36px; flex:none; object-fit:contain; }
+.footer-brand-image { display:inline-block; padding:8px 12px; background:#faf8f3; border-radius:4px; }
+@media(max-width:600px) { .wordmark img.brand-icon { width:26px; height:26px; } .brand-lockup { gap:5px; } .brand-lockup img:not(.brand-icon) { max-width:125px; } }
+.greeting-card-fields small:not([data-count-for]),.extra-picker small { text-align:left; }

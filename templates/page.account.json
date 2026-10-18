@@ -1,10 +1,1 @@
-{
-  "sections": {
-    "main": {
-      "type": "account-entry"
-    }
-  },
-  "order": [
-    "main"
-  ]
-}
+{"sections":{"main":{"type":"account-entry","settings":{}}},"order":["main"]}

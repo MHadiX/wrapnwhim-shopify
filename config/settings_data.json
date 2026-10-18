@@ -1,16 +1,1 @@
-{
-  "current": {
-    "heading_font": "cormorant_garamond_n4",
-    "body_font": "inter_n4",
-    "color_navy": "#101B2D",
-    "color_champagne": "#D8BE91",
-    "color_ivory": "#FAF8F3",
-    "color_beige": "#F1EBE1",
-    "color_text": "#252525",
-    "card_ratio": "4 / 5",
-    "card_image_fit": "cover",
-    "show_product_type": false,
-    "use_shopify_fonts": false
-  },
-  "presets": {}
-}
+{"current":{"content_for_index":[],"blocks":{"8208493610395315515":{"type":"shopify:\/\/apps\/dondy-whatsapp\/blocks\/app-block\/7f5a70cb-e171-4cc7-ac02-e2220203abd6","disabled":false,"settings":{}}}}}

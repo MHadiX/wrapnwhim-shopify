@@ -43,7 +43,7 @@ try{
   assert.equal(await page.locator('hero-slideshow').evaluate(n=>n.paused),true);await page.emulateMedia({reducedMotion:'no-preference'});
  });
  await check('Featured product carousel moves on mobile and quick view loads the real product form',async()=>{
-  await go('/');const track=page.locator('.product-carousel').first();await page.locator('scroll-carousel [data-next]').first().click();await page.waitForFunction(()=>document.querySelector('.product-carousel').scrollLeft>0);assert.ok(await track.evaluate(n=>n.scrollLeft)>0);
+  await page.setViewportSize({width:390,height:844});await go('/');const track=page.locator('.product-carousel').first();await track.locator('..').locator('[data-next]').click();await page.waitForFunction(()=>document.querySelector('.product-carousel').scrollLeft>0);assert.ok(await track.evaluate(n=>n.scrollLeft)>0);
   await go('/collections/all');await page.locator('[data-quick-view]').first().click();await page.waitForFunction(()=>document.querySelector('#QuickView').open);assert.equal(await page.locator('#QuickView product-form').count(),1);await page.keyboard.press('Escape');
  });
  await check('Variant combination, real price changes, sold-out and unavailable states',async()=>{

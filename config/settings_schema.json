@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "WrapnWhim",
-    "theme_version": "2.1.1",
+    "theme_version": "2.2.0",
     "theme_author": "WrapnWhim",
     "theme_documentation_url": "https://github.com/MHadiX/wrapnwhim-shopify",
     "theme_support_url": "https://github.com/MHadiX/wrapnwhim-shopify/issues"
@@ -14,6 +14,12 @@
         "type": "image_picker",
         "id": "logo",
         "label": "Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "brand_icon",
+        "label": "Logo icon",
+        "info": "Optional gift-box icon beside the wordmark. Also used as the favicon if no separate favicon is selected."
       },
       {
         "type": "image_picker",
@@ -154,6 +160,12 @@
     "name": "Gift extras",
     "settings": [
       {
+        "type": "checkbox",
+        "id": "gift_extras_all_products",
+        "label": "Offer configured extras on all eligible products",
+        "default": true
+      },
+      {
         "type": "product_list",
         "id": "default_gift_extras",
         "label": "Default extra products",
@@ -167,6 +179,29 @@
         "max": 20,
         "step": 1,
         "default": 5
+      }
+    ]
+  },
+  {
+    "name": "Greeting cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "greeting_card_enabled",
+        "label": "Show free greeting card fields",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "greeting_occasions",
+        "label": "Greeting occasions (comma separated)",
+        "default": "Birthday,Anniversary,Wedding,Congratulations,Thank You,Get Well Soon,New Baby,Graduation,Eid,Just Because"
+      },
+      {
+        "type": "text",
+        "id": "greeting_card_help",
+        "label": "Greeting occasion help text",
+        "default": "Select occasion for free greeting card"
       }
     ]
   }

@@ -1,0 +1,5 @@
+{% assign greeting_occasions = settings.greeting_occasions | default: 'Birthday,Anniversary,Wedding,Congratulations,Thank You,Get Well Soon,New Baby,Graduation,Eid,Just Because' | split: ',' %}
+<div class="greeting-card-fields">
+ <div class="field"><label for="{{ form_id }}-greeting-occasion">Greeting Occasion</label><select id="{{ form_id }}-greeting-occasion" name="properties[Greeting occasion]"><option value="">No greeting card</option>{% for occasion in greeting_occasions %}{% assign occasion_name = occasion | strip %}{% if occasion_name != blank %}<option value="{{ occasion_name | escape }}">{{ occasion_name | escape }}</option>{% endif %}{% endfor %}</select><small>{{ settings.greeting_card_help | default: 'Select occasion for free greeting card' | escape }}</small></div>
+ <div class="field"><label for="{{ form_id }}-gift-message">Greeting Card Message</label><textarea id="{{ form_id }}-gift-message" name="properties[Gift message]" maxlength="250" rows="3" data-counter data-preview-field="message"></textarea><small data-count-for="{{ form_id }}-gift-message">0 / 250</small></div>
+</div>

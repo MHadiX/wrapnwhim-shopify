@@ -1,17 +1,1 @@
-{
-  "sections": {
-    "main": {
-      "type": "main-page"
-    },
-    "products": {
-      "type": "featured-products",
-      "settings": {
-        "heading": "Make it theirs."
-      }
-    }
-  },
-  "order": [
-    "main",
-    "products"
-  ]
-}
+{"sections":{"main":{"type":"main-page","settings":{}},"products":{"type":"featured-products","settings":{"heading":"Make it theirs."}}},"order":["main","products"]}

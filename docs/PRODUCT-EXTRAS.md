@@ -1,8 +1,8 @@
-# Catalog extras and gift messages — WrapnWhim 2.1.0
+# Catalog extras and gift messages — WrapnWhim 2.2.0
 
 ## Install safely
 
-Upload `WrapnWhim-2.1.0.zip` under **Online Store → Themes → Add theme → Upload ZIP**. Preview this unpublished theme with your real catalog before publishing. Publishing is a separate merchant action; this release does not change your live theme or merchant settings. For an existing 2.0.1 installation, uploading a separate theme is safest: transfer your existing editor settings and product templates, and configure the new Gift extras settings. Existing product metafields remain on products.
+Upload `WrapnWhim-2.2.0.zip` under **Online Store → Themes → Add theme → Upload ZIP**. Preview this unpublished theme with your real catalog before publishing. Publishing is a separate merchant action; this release does not change your live theme or merchant settings. For an existing 2.0.1 installation, uploading a separate theme is safest: transfer your existing editor settings and product templates, and configure the new Gift extras settings. Existing product metafields remain on products.
 
 ## Admin configuration (no source editing)
 
@@ -10,11 +10,11 @@ Under **Settings → Custom data → Products → Add definition**, create these
 
 | Name | Namespace/key | Type | Purpose |
 |---|---|---|---|
-| Enable gift extras | `custom.gift_extras_enabled` | True or false (`boolean`) | Set true on each eligible parent gift. Missing/false hides this feature. Bulk editor can set this on multiple products. |
+| Enable gift extras | `custom.gift_extras_enabled` | True or false (`boolean`) | False opts a parent out; true opts it in. A missing value follows the global offer-on-all setting (enabled by default). |
 | Gift extra products | `custom.gift_extras` | Product, **list of products** (`list.product_reference`) | Optional per-parent extras; add a maximum validation of 12 references. Order controls display order. |
 | Maximum extra quantity | `custom.gift_extra_max_quantity` | Integer (`number_integer`) | On each extra product, optional positive maximum. Recommended validation minimum 1, maximum 20. |
 
-In **Customize theme → Theme settings → Gift extras**, choose **Default extra products** (up to 12) and **Default maximum quantity per extra** (1–20). Enabled parent products without a nonempty per-product reference list inherit these defaults. To hide extras completely on a parent, set its enable metafield false; an empty reference list means “use defaults.” Enabled parents with no configured extras still offer a free gift message.
+In **Customize theme → Theme settings → Gift extras**, choose **Default extra products** (up to 12) and **Default maximum quantity per extra** (1–20). By default all eligible parent products without a nonempty per-product reference list inherit these defaults. Disable Offer configured extras on all eligible products to require explicit per-product opt-in. To hide extras completely on a parent, set its enable metafield false; an empty reference list means “use defaults.” When no extras are configured, the paid extras panel is hidden. Independent free greeting fields remain available.
 
 Publish extra products to the Online Store sales channel and make them available in the shopper's market. Manage their images, prices, stock, options, continue-selling policy, and quantity rules normally in Products. No duplicate price database exists. Shopify variant availability respects continue-selling; a true availability flag does not promise a particular stock quantity. Submit-time Shopify inventory checks are authoritative.
 
@@ -24,7 +24,7 @@ The storefront excludes the main product itself, subscription-only products, and
 
 ## Customer and cart behavior
 
-Nothing is selected on a fresh page load. Each card offers a real available variant and quantity constrained by both the merchant maximum and Shopify quantity rules. The message and names are optional. Prices use Shopify's money format, with store/presentment currency fallback. Totals are calculated with integer Shopify values and are informational before discounts, taxes, and shipping.
+Nothing is selected on a fresh page load. The additional-products dropdown adds a selected card with a real variant and quantity constrained by both the merchant maximum and Shopify quantity rules. The message and names are optional. Prices use Shopify's money format, with store/presentment currency fallback. Totals are calculated with integer Shopify values and are informational before discounts, taxes, and shipping.
 
 On submission, controls are temporarily locked; selected variants are reloaded from locale-aware product JSON endpoints. A price change requires reviewing the revised total and submitting again. Unavailable items and invalid quantities prevent the add. The main product and extras are sent together as real variant lines using the AJAX Cart API. Only a confirmed matching cart state produces success. No automatic retry of an ambiguous add request occurs.
 

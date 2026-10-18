@@ -1,11 +1,1 @@
-{
-  "layout": false,
-  "sections": {
-    "main": {
-      "type": "quick-product"
-    }
-  },
-  "order": [
-    "main"
-  ]
-}
+{"layout":false,"sections":{"main":{"type":"quick-product","settings":{}}},"order":["main"]}
