@@ -253,7 +253,7 @@
       } catch (failure) { error.textContent = failure.message; }
       finally { this.busy = false; this.form.inert = false; this.form.removeAttribute('aria-busy'); this.add.disabled = !this.variant?.available; this.add.textContent = this.variant?.available ? (this.extras ? 'Add Customized Gift to Cart' : 'Add to gift bag') : 'Sold out'; if (this.mobileButton) { this.mobileButton.disabled = this.add.disabled; this.mobileButton.textContent = this.add.textContent; } }
     }
-    disconnectedCallback() { window.removeEventListener('pageshow', this.onPageShow); this.purchaseObserver?.disconnect(); if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
+    disconnectedCallback() { this.extras?.destroy(); window.removeEventListener('pageshow', this.onPageShow); this.purchaseObserver?.disconnect(); if (this.uploadURL) URL.revokeObjectURL(this.uploadURL); }
   }
   customElements.define('product-form', ProductForm);
 

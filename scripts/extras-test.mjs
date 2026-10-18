@@ -7,7 +7,7 @@ const f=await fixtureServer();const b=await chromium.launch({executablePath:'/us
 const go=()=>page.goto(f.url+'/products/gift-3',{waitUntil:'networkidle'});
 async function check(name,fn){await fn();console.log('PASS',name);count++;}
 const cards=()=>page.locator('[data-extra-card]');
-const selectExtra=async(index)=>page.locator('[data-extra-picker]').selectOption(await cards().nth(index).locator('[data-extra-variant]').inputValue());
+const selectExtra=async(index)=>{const id=await cards().nth(index).locator('[data-extra-variant]').inputValue();const menu=page.locator('[data-extra-menu]');if(!await menu.evaluate(n=>n.open))await menu.locator('summary').click();await page.locator(`[data-extra-option="${id}"]`).click();};
 const submit=async()=>{await page.locator('[data-add]').click();await page.waitForFunction(()=>!document.querySelector('product-form').busy);};
 try{
 await check('Extras use real variant data, default unchecked, updated quantities and main variants',async()=>{
@@ -73,6 +73,20 @@ await check('Dropdown removal, global default extras, and explicit per-product o
 await check('Free greeting fields and native variant persist without JavaScript',async()=>{
  const native=await b.newContext({javaScriptEnabled:false});const p=await native.newPage();await p.goto(f.url+'/products/gift-3');await p.locator('[name="properties[Greeting occasion]"]').selectOption('Birthday');await p.locator('[name="properties[Gift message]"]').fill('With love');
  const data=await p.locator('product-form form').evaluate(form=>Object.fromEntries(new FormData(form)));assert.equal(data.id,'30');assert.equal(data['properties[Greeting occasion]'],'Birthday');assert.equal(data['properties[Gift message]'],'With love');assert.equal(await p.locator('[data-extra-picker]').isVisible(),false);await native.close();
+});
+await check('Image dropdown keeps thumbnails, title and price aligned on small and large screens',async()=>{
+ for(const width of [320,390,1440]){
+  await page.setViewportSize({width,height:900});await go();await page.locator('[data-extra-menu] summary').click();
+  const options=page.locator('[data-extra-option]');assert.equal(await options.count(),4);assert.equal(await page.locator('[data-extra-option="42"]').isDisabled(),true);
+  const measurements=await options.first().evaluate(async node=>{const img=node.querySelector('img');await img.decode();const title=node.querySelector('.extra-option-title').getBoundingClientRect();const price=node.querySelector('.extra-option-price').getBoundingClientRect();return {image:img.width,loaded:img.naturalWidth>0,sameLine:Math.abs(title.y-price.y)<5,ordered:title.right<=price.left+1,overflow:document.documentElement.scrollWidth>innerWidth+1};});
+  assert.deepEqual(measurements,{image:44,loaded:true,sameLine:true,ordered:true,overflow:false});
+ }
+ const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();assert.deepEqual(result.violations.map(v=>v.id),[]);
+});
+await check('Image dropdown supports arrow navigation, Escape and keyboard selection',async()=>{
+ await go();const trigger=page.locator('[data-extra-menu] summary');await trigger.focus();await page.keyboard.press('ArrowDown');assert.equal(await page.locator('[data-extra-option="40"]').evaluate(n=>n===document.activeElement),true);
+ await page.keyboard.press('End');assert.equal(await page.locator('[data-extra-option="50"]').evaluate(n=>n===document.activeElement),true);await page.keyboard.press('Escape');assert.equal(await page.locator('[data-extra-menu]').evaluate(n=>n.open),false);assert.equal(await trigger.evaluate(n=>n===document.activeElement),true);
+ await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');assert.equal(await page.locator('[data-extra-card]:visible').count(),1);assert.equal(await page.locator('[data-extra-menu]').evaluate(n=>n.open),false);
 });
 await check('Responsive extras and WCAG checks at 320,390,768,1440px',async()=>{
  for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:900});await go();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}

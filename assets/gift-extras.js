@@ -6,14 +6,29 @@
    this.owner = owner; this.commerce = commerce; this.section = owner.querySelector('[data-gift-extras]');
    this.cards = [...this.section.querySelectorAll('[data-extra-card]')].map(node => ({node, variants: JSON.parse(node.querySelector('[data-extra-data]').textContent), max: Number(node.dataset.max), select: node.querySelector('[data-extra-select]'), variant: node.querySelector('[data-extra-variant]'), quantity: node.querySelector('[data-extra-quantity]')}));
    this.picker = this.section.querySelector('[data-extra-picker]');
+   this.menu = this.section.querySelector('[data-extra-menu]');
+   this.options = this.section.querySelector('[data-extra-options]');
+   this.trigger = this.menu.querySelector('summary');
+   this.abort = new AbortController();
+   document.addEventListener('pointerdown', event => { if (!this.menu.contains(event.target)) this.menu.open = false; }, {signal:this.abort.signal});
+   this.menu.addEventListener('keydown', event => {
+    const buttons = [...this.options.querySelectorAll('button:not(:disabled)')];
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); this.menu.open = false; this.trigger.focus(); }
+    if (['ArrowDown','ArrowUp','Home','End'].includes(event.key) && buttons.length) {
+     event.preventDefault(); this.menu.open = true;
+     const current = buttons.indexOf(document.activeElement);
+     const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length-1 : current < 0 ? (event.key === 'ArrowUp' ? buttons.length-1 : 0) : (current + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+     buttons[next].focus();
+    }
+   });
    this.section.querySelector('[data-extra-picker-field]').hidden = false;
    this.picker.addEventListener('change', () => {
     const card = this.cards.find(card => card.variants.some(variant => String(variant.id) === this.picker.value));
     if (!card) return;
     card.variant.value = this.picker.value; card.select.checked = true; this.picker.value = ''; this.update();
-    card.node.querySelector('[data-extra-quantity]').focus();
+    this.menu.open = false; card.node.querySelector('[data-extra-quantity]').focus();
    });
-   this.cards.forEach(card => card.node.querySelector('[data-extra-remove]').addEventListener('click', () => { card.select.checked = false; this.update(); this.picker.focus(); }));
+   this.cards.forEach(card => card.node.querySelector('[data-extra-remove]').addEventListener('click', () => { card.select.checked = false; this.update(); this.trigger.focus(); }));
    this.section.querySelector('[data-extra-grid]').hidden = false;
    this.section.querySelector('[data-extra-summary]').hidden = false;
    owner.form.addEventListener('change', () => this.update());
@@ -37,6 +52,7 @@
    }
    const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = 'Choose an extra to add';
    this.picker.replaceChildren(placeholder);
+   this.options.replaceChildren();
    for (const card of this.cards) {
     const group = document.createElement('optgroup'); group.label = card.node.querySelector('.extra-choice span').textContent;
     for (const variant of card.variants) {
@@ -45,10 +61,24 @@
      option.disabled = !available;
      option.textContent = `${group.label}${variant.title === 'Default Title' ? '' : ' — '+variant.title} — ${this.commerce.money(variant.price)}${available ? '' : ' — Sold Out'}`;
      group.append(option);
+     const button = document.createElement('button'); button.type = 'button'; button.className = 'extra-option'; button.dataset.extraOption = String(variant.id); button.disabled = !available;
+     const source = card.node.querySelector('.extra-image');
+     if (source) { const image = source.cloneNode(); image.width = 44; image.height = 44; image.alt = ''; image.className = 'extra-option-image'; image.sizes = '44px'; button.append(image); }
+     else { const spacer = document.createElement('span'); spacer.className = 'extra-option-image'; spacer.setAttribute('aria-hidden','true'); button.append(spacer); }
+     const info = document.createElement('span'); info.className = 'extra-option-info';
+     const row = document.createElement('span'); row.className = 'extra-option-line';
+     const title = document.createElement('span'); title.className = 'extra-option-title'; title.textContent = group.label; title.title = group.label;
+     const price = document.createElement('span'); price.className = 'extra-option-price'; price.textContent = this.commerce.money(variant.price);
+     row.append(title,price); info.append(row);
+     if (variant.title !== 'Default Title' || !available) { const subtitle = document.createElement('span'); subtitle.className = 'extra-option-variant'; subtitle.textContent = `${variant.title === 'Default Title' ? '' : variant.title}${available ? '' : ' · Sold Out'}`; info.append(subtitle); }
+     button.append(info);
+     button.addEventListener('click', () => { this.picker.value = String(variant.id); this.picker.dispatchEvent(new Event('change',{bubbles:true})); });
+     this.options.append(button);
     }
     this.picker.append(group);
    }
    this.picker.disabled = !this.cards.some(card => card.variants.some(variant => variant.available && (variant.quantity_rule?.min || 1) <= Math.min(card.max,variant.quantity_rule?.max || card.max)));
+   this.trigger.setAttribute('aria-disabled',String(this.picker.disabled));
    this.section.querySelector('[data-extra-empty]').hidden = !this.picker.disabled;
    const base = (this.owner.variant?.price || 0) * (Number(this.owner.form.elements.quantity.value) || 0);
    const extras = this.cards.filter(c => c.select.checked).reduce((sum, c) => sum + (this.variant(c)?.price || 0) * (Number(c.quantity.value) || 0), 0);
@@ -56,6 +86,7 @@
    if (mobilePrice) { mobilePrice.textContent = Number.isSafeInteger(base+extras) ? this.commerce.money(base+extras) : 'Check quantities'; const label = mobilePrice.parentElement.querySelector('small'); if (label) label.textContent = 'Estimated gift total'; }
    for (const [selector, value] of [['[data-base-total]',base],['[data-extras-total]',extras],['[data-gift-total]',base+extras]]) this.section.querySelector(selector).textContent = Number.isSafeInteger(value) && value >= 0 ? this.commerce.money(value) : 'Check quantities';
   }
+  destroy() { this.abort.abort(); }
   async prepare(root, request) {
    const quantity = Number(this.owner.form.elements.quantity.value);
    const selected = this.cards.filter(c => c.select.checked);
